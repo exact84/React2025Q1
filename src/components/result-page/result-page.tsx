@@ -7,13 +7,16 @@ interface CharacterListProps {
 }
 
 export default class ResultPage extends Component<CharacterListProps> {
+  shouldComponentUpdate(nextProps: CharacterListProps) {
+    return this.props.characters !== nextProps.characters;
+  }
   render(): ReactNode {
     const { characters } = this.props;
-
+    // console.log(characters);
     return (
       <div>
         {characters.length > 0 ? (
-          <ul>
+          <ul className={styles.character}>
             {characters.map((character, index) => (
               <li key={index} className={styles.character}>
                 <h3 className={styles.character_name}>{character.name}</h3>

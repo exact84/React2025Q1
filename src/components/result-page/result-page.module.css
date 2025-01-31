@@ -1,6 +1,13 @@
-.character {
+li.character {
   margin: 0;
   padding: 3px;
+  border: green solid 1px;
+  /* list-style-type: none; */
+}
+
+ul.character {
+  margin: 0;
+  padding: 0;
   border: green solid 1px;
   list-style-type: none;
 }

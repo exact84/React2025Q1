@@ -1,12 +1,11 @@
-// import { useState } from 'react';
 import './App.css';
+import Search from './components/search/search';
 
 function App() {
-  // const [count, setCount] = useState(0);
-
   return (
     <>
-      <h1>&quot;Class components&quot;</h1>
+      <h1>Task &quot;Class components&quot;</h1>
+      <Search />
     </>
   );
 }
