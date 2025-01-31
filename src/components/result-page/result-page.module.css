@@ -2,7 +2,6 @@ li.character {
   margin: 0;
   padding: 3px;
   border: green solid 1px;
-  /* list-style-type: none; */
 }
 
 ul.character {
@@ -20,5 +19,4 @@ ul.character {
 .character_name {
   margin: 0;
   padding: 0;
-  /* font-size: 14px; */
 }

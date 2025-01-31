@@ -12,7 +12,6 @@ export default class ResultPage extends Component<CharacterListProps> {
   }
   render(): ReactNode {
     const { characters } = this.props;
-    // console.log(characters);
     return (
       <div>
         {characters.length > 0 ? (

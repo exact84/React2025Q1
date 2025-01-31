@@ -16,24 +16,27 @@ class Search extends Component<object, State> {
   constructor(props: object) {
     super(props);
     this.state = {
-      queryString: '',
+      queryString: localStorage.getItem('queryString') || '',
       result: [],
       isLoading: false,
     };
   }
+
+  componentDidMount(): void {
+    if (this.state.queryString) this.requestAPI();
+  }
+
   requestAPI = async () => {
     const { queryString } = this.state;
     let url = baseUrl;
     if (queryString.trim()) {
       url += '?search=' + encodeURIComponent(queryString);
+      localStorage.setItem('queryString', queryString);
     }
     this.setState({ isLoading: true });
     try {
       const response = await fetch(url);
       const data = await response.json();
-      // const filteredCharacters = data.results.filter((character: Character) =>
-      //   character.name.toLowerCase().includes(queryString.toLowerCase())
-      // );
       const filteredCharacters = data.results;
 
       this.setState({ result: filteredCharacters, isLoading: false });
