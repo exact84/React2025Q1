@@ -10,6 +10,7 @@ interface State {
   queryString: string;
   result: Character[];
   isLoading: boolean;
+  errorAPI: string;
 }
 
 interface Props {
@@ -24,6 +25,7 @@ class Search extends Component<Props, State> {
         props.queryString || localStorage.getItem('queryString') || '',
       result: [],
       isLoading: false,
+      errorAPI: '',
     };
   }
 
@@ -47,7 +49,8 @@ class Search extends Component<Props, State> {
       this.setState({ result: filteredCharacters, isLoading: false });
     } catch (error) {
       console.error('API Error: ', error);
-      this.setState({ isLoading: false });
+
+      this.setState({ isLoading: false, errorAPI: 'API Error' });
     }
   };
 
@@ -74,7 +77,10 @@ class Search extends Component<Props, State> {
               <div>Loading, please wait...</div>
             </div>
           ) : (
-            <ResultPage characters={this.state.result} />
+            <ResultPage
+              characters={this.state.result}
+              errorAPI={this.state.errorAPI}
+            />
           )}
         </section>
       </>

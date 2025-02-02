@@ -4,6 +4,7 @@ import styles from './result-page.module.css';
 
 interface CharacterListProps {
   characters: Character[];
+  errorAPI: string;
 }
 
 export default class ResultPage extends Component<CharacterListProps> {
@@ -19,7 +20,7 @@ export default class ResultPage extends Component<CharacterListProps> {
     if (this.state.isError) {
       throw new Error('This is a test error!');
     }
-    const { characters } = this.props;
+    const { characters, errorAPI } = this.props;
     return (
       <div>
         {characters.length > 0 ? (
@@ -43,7 +44,7 @@ export default class ResultPage extends Component<CharacterListProps> {
             ))}
           </ul>
         ) : (
-          <p>No characters found.</p>
+          <p>No characters found. {errorAPI}</p>
         )}
         <button onClick={this.handleClickError}>Error Button</button>
       </div>
