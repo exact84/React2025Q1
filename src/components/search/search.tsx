@@ -1,5 +1,5 @@
 import { Component, ReactNode } from 'react';
-import ResultPage from '../result-page/result-page';
+import ResultPage from '../Result-page/Result-page';
 import { Character } from '../../types/characterTypes';
 import styles from './search.module.css';
 import loadingGif from '../../assets/star-wars-disney.gif';
@@ -12,21 +12,26 @@ interface State {
   isLoading: boolean;
 }
 
-class Search extends Component<object, State> {
-  constructor(props: object) {
+interface Props {
+  queryString?: string;
+}
+
+class Search extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
-      queryString: localStorage.getItem('queryString') || '',
+      queryString:
+        props.queryString || localStorage.getItem('queryString') || '',
       result: [],
       isLoading: false,
     };
   }
 
   componentDidMount(): void {
-    if (this.state.queryString) this.requestAPI();
+    if (this.state.queryString.trim() !== '') this.handleRequestAPI();
   }
 
-  requestAPI = async () => {
+  handleRequestAPI = async () => {
     const { queryString } = this.state;
     let url = baseUrl;
     if (queryString.trim()) {
@@ -47,9 +52,7 @@ class Search extends Component<object, State> {
   };
 
   checkData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ queryString: event.target.value }, () =>
-      console.log('Data: ', this.state.queryString)
-    );
+    this.setState({ queryString: event.target.value });
   };
 
   render(): ReactNode {
@@ -62,7 +65,7 @@ class Search extends Component<object, State> {
             onChange={this.checkData}
             placeholder="Enter request..."
           ></input>
-          <button onClick={this.requestAPI}>Search</button>
+          <button onClick={this.handleRequestAPI}>Search</button>
         </section>
         <section className={styles.results}>
           {this.state.isLoading ? (

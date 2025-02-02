@@ -1,13 +1,16 @@
+import { Component } from 'react';
 import './App.css';
-import Search from './components/search/search';
+import Search from './components/Search/Search';
 
-function App() {
-  return (
-    <>
-      <h1>Task &quot;Class components&quot;</h1>
-      <Search />
-    </>
-  );
+class App extends Component {
+  render() {
+    return (
+      <>
+        <h1>Task &quot;Class components&quot;</h1>
+        <Search />
+      </>
+    );
+  }
 }
 
 export default App;

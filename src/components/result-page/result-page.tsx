@@ -7,10 +7,18 @@ interface CharacterListProps {
 }
 
 export default class ResultPage extends Component<CharacterListProps> {
-  shouldComponentUpdate(nextProps: CharacterListProps) {
-    return this.props.characters !== nextProps.characters;
-  }
+  state = {
+    isError: false,
+  };
+
+  handleClickError = () => {
+    this.setState({ isError: true });
+  };
+
   render(): ReactNode {
+    if (this.state.isError) {
+      throw new Error('This is a test error!');
+    }
     const { characters } = this.props;
     return (
       <div>
@@ -37,6 +45,7 @@ export default class ResultPage extends Component<CharacterListProps> {
         ) : (
           <p>No characters found.</p>
         )}
+        <button onClick={this.handleClickError}>Error Button</button>
       </div>
     );
   }
