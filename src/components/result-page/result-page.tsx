@@ -1,6 +1,6 @@
 import { Component, ReactNode } from 'react';
 import { Character } from '../../types/characterTypes';
-import styles from './result-page.module.css';
+import styles from './Result-page.module.css';
 
 interface CharacterListProps {
   characters: Character[];

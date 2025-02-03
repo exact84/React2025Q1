@@ -1,7 +1,7 @@
 import { Component, ReactNode } from 'react';
 import ResultPage from '../Result-page/Result-page';
 import { Character } from '../../types/characterTypes';
-import styles from './search.module.css';
+import styles from './Search.module.css';
 import loadingGif from '../../assets/star-wars-disney.gif';
 
 const baseUrl = 'https://swapi.dev/api/people/';
@@ -30,7 +30,7 @@ class Search extends Component<Props, State> {
   }
 
   componentDidMount(): void {
-    if (this.state.queryString.trim() !== '') this.handleRequestAPI();
+    this.handleRequestAPI();
   }
 
   handleRequestAPI = async () => {
