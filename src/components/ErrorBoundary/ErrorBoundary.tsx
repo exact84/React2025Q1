@@ -1,7 +1,15 @@
 import { Component, ReactNode } from 'react';
+import { Character } from 'src/types/characterTypes';
+import Search from '../Search/Search';
 
 interface Props {
   children: ReactNode;
+  onError: (error: Error) => void;
+  onSearch: (
+    characters: Character[],
+    errorAPI: string,
+    isLoading: boolean
+  ) => void;
 }
 
 interface State {
@@ -19,14 +27,16 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error): void {
-    console.log('Caught by ErrorBoundary:', error);
+    this.props.onError(error);
   }
 
   render() {
+    console.log('рендер Boundary');
     if (this.state.hasError)
       return (
         <>
-          <h1>An Error occurred</h1>
+          <Search onSearch={this.props.onSearch} />
+          <h1>An Error occurred but handled</h1>
           <div>------------------------------</div>
           <button
             onClick={() => {
