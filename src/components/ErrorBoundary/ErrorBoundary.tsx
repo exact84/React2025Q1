@@ -1,15 +1,9 @@
 import { Component, ReactNode } from 'react';
-import { Character } from 'src/types/characterTypes';
 import Search from '../Search/Search';
 
 interface Props {
   children: ReactNode;
   onError: (error: Error) => void;
-  onSearch: (
-    characters: Character[],
-    errorAPI: string,
-    isLoading: boolean
-  ) => void;
 }
 
 interface State {
@@ -30,12 +24,16 @@ export class ErrorBoundary extends Component<Props, State> {
     this.props.onError(error);
   }
 
+  handleSearch() {
+    // не обновляет строку поиска
+  }
+
   render() {
     console.log('рендер Boundary');
     if (this.state.hasError)
       return (
         <>
-          <Search onSearch={this.props.onSearch} />
+          <Search onSearch={this.handleSearch} />
           <h1>An Error occurred but handled</h1>
           <div>------------------------------</div>
           <button

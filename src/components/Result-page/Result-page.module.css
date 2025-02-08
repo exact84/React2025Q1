@@ -1,7 +1,26 @@
+.results {
+  display: flex;
+  justify-content: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-end; */
+  /* align-items: flex-end; */
+  width: 100%;
+}
+
 li.character {
   margin: 0;
   padding: 3px;
   border: green solid 1px;
+}
+
+li.character-info {
+  margin: 0;
+  padding: 3px;
+  /* border: green solid 1px; */
 }
 
 ul.character {
@@ -19,4 +38,14 @@ ul.character {
 .character_name {
   margin: 0;
   padding: 0;
+}
+
+.button {
+  max-width: 150px;
+  align-self: center;
+}
+
+.details {
+  max-width: 400px;
+  margin: 0 10px;
 }
