@@ -6,6 +6,7 @@ import { Character } from './types/characterTypes';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Details from './components/Details/Details';
+import { useRestoreSearch } from './hooks/useRestoreSearch';
 
 export default function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -13,9 +14,7 @@ export default function App() {
   const [totalPages, setTotalPages] = useState(0);
   const [errorAPI, setErrorAPI] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [queryString, setQueryString] = useState(
-    localStorage.getItem('queryString') || ''
-  );
+  const [queryString, setQueryString] = useRestoreSearch();
 
   const baseUrl = 'https://swapi.dev/api/people/?';
 
@@ -26,7 +25,6 @@ export default function App() {
 
   function handleError(error: Error) {
     console.error('Error caught in App:', error);
-    // setIsError(true);
   }
 
   const handleRequestAPI = useCallback(
@@ -35,7 +33,6 @@ export default function App() {
       let url = baseUrl;
       if (queryString.trim()) {
         url += 'search=' + encodeURIComponent(queryString) + '&';
-        localStorage.setItem('queryString', queryString);
       }
       url += 'page=' + page;
       try {
@@ -62,15 +59,13 @@ export default function App() {
     handleRequestAPI(currentPage);
   }, [currentPage, handleRequestAPI]);
 
-  // function resetError() {
-  //   setIsError(false);
-  // }
+  const basename = import.meta.env.BASE_URL || '/';
 
   console.log('рендер App');
   return (
     <ErrorBoundary onError={handleError}>
       <h1>Task2 &quot;React Routing. Tests.&quot;</h1>
-      <Router>
+      <Router basename={basename}>
         <Search onSearch={handleSearch} />
         <Routes>
           <Route

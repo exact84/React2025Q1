@@ -84,7 +84,7 @@ export default function ResultPage(props: CharacterListProps) {
     return parts[parts.length - 2];
   };
 
-  console.log('рендер ResultPage.', props.errorAPI);
+  console.log('рендер ResultPage.');
   return (
     <section className={styles.results}>
       {isLoading ? (
@@ -101,10 +101,6 @@ export default function ResultPage(props: CharacterListProps) {
                       className={styles.character}
                       onClick={() => handleChooseItem(character)}
                     >
-                      {/* <Link
-                        to={`/details/${extractIdFromUrl(character.url)}`}
-                        className={styles.character_link}
-                      > */}
                       <h3 className={styles.character_name}>
                         {character.name}
                       </h3>
@@ -117,7 +113,6 @@ export default function ResultPage(props: CharacterListProps) {
                       <span className={styles.character_property}>
                         <strong>Gender:</strong> {character.gender}
                       </span>
-                      {/* </Link> */}
                     </li>
                   ))}
                 </ul>
