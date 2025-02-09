@@ -40,6 +40,11 @@ ul.character {
   padding: 0;
 }
 
+.character_link {
+  margin: 0;
+  padding: 0;
+}
+
 .button {
   max-width: 150px;
   align-self: center;

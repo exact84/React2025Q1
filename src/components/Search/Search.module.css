@@ -1,5 +1,6 @@
 .top {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: 10px;
 }
@@ -11,9 +12,9 @@
 
 input[type='text'] {
   width: 100%;
-  max-width: 300px;
+  max-width: 200px;
   padding: 10px;
-  margin: 10px 0;
+  margin: 10px 5px;
   border: 2px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
@@ -38,6 +39,9 @@ button {
   transition:
     background-color 0.3s ease,
     transform 0.2s ease;
+}
+button.choosen {
+  background-color: #123312;
 }
 
 button:hover {
