@@ -1,7 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useRestoreSearch } from '../hooks/useRestoreSearch';
 
-// Мокаем localStorage
 const localStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),

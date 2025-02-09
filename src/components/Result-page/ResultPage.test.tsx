@@ -1,8 +1,9 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import ResultPage from '../Result-page/Result-page';
+import { vi } from 'vitest';
 
-describe('Card List Component', () => {
+describe('ResultPage Component', () => {
   it('renders the specified number of cards', async () => {
     render(
       <MemoryRouter>
@@ -50,38 +51,80 @@ describe('Card List Component', () => {
       expect(screen.getByText('No characters found.')).toBeInTheDocument();
     });
   });
-});
 
-it('updates the URL query parameter when the page changes', async () => {
-  render(
-    <MemoryRouter initialEntries={['/?query=Luke&page=1']}>
-      <ResultPage
-        characters={[
-          {
-            name: 'Luke Skywalker',
-            height: '172',
-            hair_color: 'blond',
-            gender: 'male',
-            url: 'https://swapi.dev/api/people/1/',
-          },
-        ]}
-        currentPage={1}
-        totalPages={3}
-        errorAPI=""
-        isLoading={false}
-        onPageChange={() => {}}
-        searchQuery="Luke"
-      />
-    </MemoryRouter>
-  );
+  it('displays a loader when isLoading is true', async () => {
+    render(
+      <MemoryRouter>
+        <ResultPage
+          characters={[]}
+          currentPage={1}
+          totalPages={0}
+          errorAPI=""
+          isLoading={true}
+          onPageChange={() => {}}
+          searchQuery=""
+        />
+      </MemoryRouter>
+    );
 
-  const pageButton = screen.getByText('2');
-  // expect(pageButton).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('loader')).toBeInTheDocument();
+    });
+  });
 
-  fireEvent.click(pageButton);
+  it('renders pagination buttons and handles page change', async () => {
+    const mockOnPageChange = vi.fn();
 
-  // Проверяем, что URL обновился
-  // await waitFor(() => {
-  //   expect(window.location.search).toContain('page=2');
-  // });
+    render(
+      <MemoryRouter>
+        <ResultPage
+          characters={[
+            {
+              name: 'Luke Skywalker',
+              height: '172',
+              hair_color: 'blond',
+              gender: 'male',
+              url: 'https://swapi.dev/api/people/1/',
+            },
+          ]}
+          currentPage={1}
+          totalPages={3}
+          errorAPI=""
+          isLoading={false}
+          onPageChange={mockOnPageChange}
+          searchQuery="Luke"
+        />
+      </MemoryRouter>
+    );
+
+    const prevButton = screen.getByText('◀');
+    const nextButton = screen.getByText('►');
+    const pageButtons = screen.getAllByRole('button', { name: /[1-3]/ });
+
+    expect(prevButton).toBeInTheDocument();
+    expect(nextButton).toBeInTheDocument();
+    expect(pageButtons).toHaveLength(3);
+
+    fireEvent.click(pageButtons[1]);
+    expect(mockOnPageChange).toHaveBeenCalledWith(2);
+  });
+
+  it('throws an error when the error button is clicked', async () => {
+    render(
+      <MemoryRouter>
+        <ResultPage
+          characters={[]}
+          currentPage={1}
+          totalPages={0}
+          errorAPI=""
+          isLoading={false}
+          onPageChange={() => {}}
+          searchQuery=""
+        />
+      </MemoryRouter>
+    );
+
+    const errorButton = screen.getByText('Error Button');
+    expect(() => fireEvent.click(errorButton)).toThrow('This is a test error!');
+  });
 });

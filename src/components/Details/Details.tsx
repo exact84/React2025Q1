@@ -67,7 +67,9 @@ export default function Details() {
             </li>
           ))}
       </ul>
-      <button onClick={handleCloseClick}> ⇦ Close</button>
+      <button onClick={handleCloseClick} className="close">
+        ⇦ Close
+      </button>
     </div>
   );
 }

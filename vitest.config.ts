@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts',
     coverage: {
       provider: 'v8',
+      reporter: ['text', 'lcov'],
       include: ['**/*.tsx', '**/*.ts'],
       exclude: [
         '**/node_modules/**',

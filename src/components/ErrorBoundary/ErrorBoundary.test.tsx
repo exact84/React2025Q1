@@ -39,11 +39,4 @@ it('resets error state when return button is clicked', () => {
       <ThrowError />
     </ErrorBoundary>
   );
-
-  // const returnButton = screen.getByText('Return');
-  // fireEvent.click(returnButton);
-
-  // expect(
-  //   screen.queryByText('An Error occurred but handled')
-  // ).not.toBeInTheDocument();
 });
