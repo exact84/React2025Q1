@@ -21,7 +21,7 @@ export default function Details() {
       try {
         const response = await fetch(`https://swapi.dev/api/people/${id}`);
         if (!response.ok) {
-          throw new Error('Person not find');
+          throw new Error('404. Person not found.');
         }
         const data = await response.json();
         setCharacter(data);

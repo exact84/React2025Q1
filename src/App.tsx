@@ -4,23 +4,34 @@ import Search from './components/Search/Search';
 import ResultPage from './components/Result-page/Result-page';
 import { Character } from './types/characterTypes';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Details from './components/Details/Details';
 import { useRestoreSearch } from './hooks/useRestoreSearch';
 
 export default function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [characters, setCharacters] = useState<Character[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [errorAPI, setErrorAPI] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [queryString, setQueryString] = useRestoreSearch();
+  const searchParams = new URLSearchParams(location.search);
+
+  const query = searchParams.get('query') || '';
+  const page = Number(searchParams.get('page')) || 1;
+
+  useEffect(() => {
+    setQueryString(query);
+    setCurrentPage(page);
+  }, [query, page, setQueryString, setCurrentPage]);
 
   const baseUrl = 'https://swapi.dev/api/people/?';
 
   const handleSearch = (query: string) => {
-    setQueryString(query);
-    setCurrentPage(1);
+    navigate(`/?query=${encodeURIComponent(query)}&page=1`);
   };
 
   function handleError(error: Error) {
@@ -28,11 +39,11 @@ export default function App() {
   }
 
   const handleRequestAPI = useCallback(
-    async (page: number) => {
+    async (page: number, query: string) => {
       setIsLoading(true);
       let url = baseUrl;
       if (queryString.trim()) {
-        url += 'search=' + encodeURIComponent(queryString) + '&';
+        url += 'search=' + encodeURIComponent(query) + '&';
       }
       url += 'page=' + page;
       try {
@@ -56,36 +67,37 @@ export default function App() {
   );
 
   useEffect(() => {
-    handleRequestAPI(currentPage);
-  }, [currentPage, handleRequestAPI]);
-
-  const basename = import.meta.env.BASE_URL || '/';
+    handleRequestAPI(page, query);
+  }, [page, query, handleRequestAPI]);
 
   console.log('рендер App');
   return (
     <ErrorBoundary onError={handleError}>
       <h1>Task2 &quot;React Routing. Tests.&quot;</h1>
-      <Router basename={basename}>
-        <Search onSearch={handleSearch} />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ResultPage
-                characters={characters}
-                errorAPI={errorAPI}
-                isLoading={isLoading}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                searchQuery={queryString}
-              />
-            }
-          >
-            <Route path="details/:id" element={<Details />} />
-          </Route>
-        </Routes>
-      </Router>
+      <Search onSearch={handleSearch} searchQuery={query} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ResultPage
+              characters={characters}
+              errorAPI={errorAPI}
+              isLoading={isLoading}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(newPage) => {
+                setCurrentPage(newPage);
+                navigate(
+                  `/?query=${encodeURIComponent(query)}&page=${newPage}`
+                );
+              }}
+              searchQuery={queryString}
+            />
+          }
+        >
+          <Route path="details/:id" element={<Details />} />
+        </Route>
+      </Routes>
     </ErrorBoundary>
   );
 }

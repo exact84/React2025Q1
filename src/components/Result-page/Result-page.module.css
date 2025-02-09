@@ -50,6 +50,12 @@ ul.character {
   align-self: center;
 }
 
+.active {
+  color: red;
+  font-size: larger;
+  font-weight: bold;
+}
+
 .details {
   max-width: 400px;
   margin: 0 10px;
