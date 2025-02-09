@@ -25,7 +25,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   handleSearch() {
-    // не обновляет строку поиска
+    console.log('somehig');
   }
 
   render() {
@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError)
       return (
         <>
-          <Search onSearch={this.handleSearch} />
+          <Search onSearch={this.handleSearch} searchQuery={''} />
           <h1>An Error occurred but handled</h1>
           <div>------------------------------</div>
           <button
