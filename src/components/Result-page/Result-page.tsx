@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 // import { store, ShowDetails, HideDetails } from '../../store';
-import { setId } from '../../store/slices/detailsSlice';
-import { useDispatch } from 'react-redux';
+// import { setId } from '../../store/slices/detailsSlice';
+// import { useDispatch } from 'react-redux';
 import { useTheme } from '../../context';
 
 interface CharacterListProps {
@@ -23,7 +23,7 @@ export default function ResultPage(props: CharacterListProps) {
   const { toggleTheme } = useTheme();
   const [isError, setIsError] = useState(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const currentId = useParams().id;
@@ -51,8 +51,8 @@ export default function ResultPage(props: CharacterListProps) {
 
   const handleChooseItem = (character: Character) => {
     const id = extractIdFromUrl(character.url);
-    if (id) dispatch(setId(Number(id)));
-    else dispatch(setId(-1));
+    // if (id) dispatch(setId(Number(id)));
+    // else dispatch(setId(-1));
 
     if (currentId === id) {
       navigate(`/?query=${searchQuery}&page=${currentPage}`);
