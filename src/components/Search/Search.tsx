@@ -18,7 +18,7 @@ function Search(props: Props) {
     setQueryString(event.target.value);
   }
 
-  console.log('рендер Search');
+  console.log('рендер Search.');
   return (
     <>
       <section className={styles.top}>

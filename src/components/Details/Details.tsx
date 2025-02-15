@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Loader from '../Loader/Loader';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/index';
 
 export default function Details() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +17,7 @@ export default function Details() {
   const currentPage = searchParams.get('page') || '1';
 
   const navigate = useNavigate();
+  const idItem = useSelector((state: RootState) => state.details.idItem);
 
   useEffect(() => {
     const fetchCharacter = async () => {
@@ -51,13 +54,13 @@ export default function Details() {
     return <p>Person not found</p>;
   }
   const handleCloseClick = () => {
-    console.log('Close!!!!');
     navigate(`/?query=${searchQuery}&page=${currentPage}`);
   };
 
   console.log('рендер Details.');
   return (
     <div className={styles.details}>
+      <h2>Current ID: {idItem}</h2>
       <ul className={styles.character}>
         {Object.entries(character)
           .filter(([, value]) => typeof value !== 'object')

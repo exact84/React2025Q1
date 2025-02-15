@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import './App.css';
+import Header from './components/Header/Header';
 import Search from './components/Search/Search';
 import ResultPage from './components/Result-page/Result-page';
+import Details from './components/Details/Details';
 import { Character } from './types/characterTypes';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import Details from './components/Details/Details';
 import { useRestoreSearch } from './hooks/useRestoreSearch';
 
 export default function App() {
@@ -73,7 +74,7 @@ export default function App() {
   console.log('рендер App');
   return (
     <ErrorBoundary onError={handleError}>
-      <h1>Task2 &quot;React Routing. Tests.&quot;</h1>
+      <Header />
       <Search onSearch={handleSearch} searchQuery={query} />
       <Routes>
         <Route

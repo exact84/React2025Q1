@@ -4,6 +4,10 @@ import Loader from '../Loader/Loader';
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
+// import { store, ShowDetails, HideDetails } from '../../store';
+import { setId } from '../../store/slices/detailsSlice';
+import { useDispatch } from 'react-redux';
+import { useTheme } from '../../context';
 
 interface CharacterListProps {
   characters: Character[];
@@ -16,7 +20,10 @@ interface CharacterListProps {
 }
 
 export default function ResultPage(props: CharacterListProps) {
+  const { toggleTheme } = useTheme();
   const [isError, setIsError] = useState(false);
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const currentId = useParams().id;
@@ -31,8 +38,21 @@ export default function ResultPage(props: CharacterListProps) {
 
   const { characters, errorAPI, isLoading, currentPage, searchQuery } = props;
 
+  // const [, forceUpdate] = useReducer((x) => {
+  //   x + 1, 0;
+  // });
+
+  // useEffect(() => {
+  //   const unsubscribe = store.subscribe(() => {
+  //     forceUpdate();
+  //   });
+  //   return unsubscribe;
+  // }, []);
+
   const handleChooseItem = (character: Character) => {
     const id = extractIdFromUrl(character.url);
+    if (id) dispatch(setId(Number(id)));
+    else dispatch(setId(-1));
 
     if (currentId === id) {
       navigate(`/?query=${searchQuery}&page=${currentPage}`);
@@ -46,7 +66,6 @@ export default function ResultPage(props: CharacterListProps) {
     return parts[parts.length - 2];
   };
 
-  console.log('рендер ResultPage.');
   if (!characters) {
     return <div>Error 404.</div>;
   }
@@ -114,9 +133,14 @@ export default function ResultPage(props: CharacterListProps) {
             ) : (
               <p>No characters found. {errorAPI}</p>
             )}
-            <button className={styles.button} onClick={handleClickError}>
-              Error Button
-            </button>
+            <div className={styles.results}>
+              <button className={styles.button} onClick={toggleTheme}>
+                Change Theme
+              </button>
+              <button className={styles.button} onClick={handleClickError}>
+                Error Button
+              </button>
+            </div>
           </div>
           {currentId ? (
             <div className={styles.details_container}>
