@@ -4,6 +4,8 @@ import Search from '../Search/Search';
 interface Props {
   children: ReactNode;
   onError: (error: Error) => void;
+  onSearch: (queryString: string) => void;
+  searchQuery: string;
 }
 
 interface State {
@@ -25,7 +27,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   handleSearch() {
-    console.log('somehig');
+    // console.log('somehig');
+    this.props.onSearch(this.props.searchQuery);
   }
 
   render() {

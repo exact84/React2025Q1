@@ -13,15 +13,15 @@
 
 li.character {
   margin: 0;
-  /* padding: 3px; */
+  padding: 3px;
   border: var(--border-color) solid 1px;
 }
 
-li.character-info {
-  margin: 0;
-  /* padding: 3px; */
-  /* border: green solid 1px; */
-}
+/* li.character-info { */
+/* margin: 0; */
+/* padding: 3px; */
+/* border: green solid 1px; */
+/* } */
 
 ul.character {
   margin: 0;
@@ -31,7 +31,7 @@ ul.character {
 }
 
 .character_property {
-  /* padding: 3px; */
+  padding: 3px;
   font-size: 12px;
 }
 

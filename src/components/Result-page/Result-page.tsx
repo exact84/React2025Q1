@@ -1,13 +1,13 @@
 import { Character } from '../../types/characterTypes';
 import styles from './Result-page.module.css';
 import Loader from '../Loader/Loader';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 // import { store, ShowDetails, HideDetails } from '../../store';
 // import { setId } from '../../store/slices/detailsSlice';
 // import { useDispatch } from 'react-redux';
-import { useTheme } from '../../context';
+import { ThemeContext } from '../../context';
 
 interface CharacterListProps {
   characters: Character[];
@@ -20,7 +20,7 @@ interface CharacterListProps {
 }
 
 export default function ResultPage(props: CharacterListProps) {
-  const { toggleTheme } = useTheme();
+  const context = useContext(ThemeContext);
   const [isError, setIsError] = useState(false);
 
   // const dispatch = useDispatch();
@@ -134,7 +134,7 @@ export default function ResultPage(props: CharacterListProps) {
               <p>No characters found. {errorAPI}</p>
             )}
             <div className={styles.results}>
-              <button className={styles.button} onClick={toggleTheme}>
+              <button className={styles.button} onClick={context.toggleTheme}>
                 Change Theme
               </button>
               <button className={styles.button} onClick={handleClickError}>

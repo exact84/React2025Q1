@@ -73,7 +73,11 @@ export default function App() {
 
   console.log('рендер App');
   return (
-    <ErrorBoundary onError={handleError}>
+    <ErrorBoundary
+      onError={handleError}
+      onSearch={handleSearch}
+      searchQuery={query}
+    >
       <Header />
       <Search onSearch={handleSearch} searchQuery={query} />
       <Routes>

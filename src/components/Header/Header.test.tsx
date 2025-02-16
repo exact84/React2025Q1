@@ -1,12 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
 import Header from './Header';
+import { ThemeContext } from '../../context';
 
 const toggleThemeMock = vi.fn();
-
-vi.mock('../../context', () => ({
-  useTheme: () => ({ toggleTheme: toggleThemeMock }),
-}));
 
 describe('Header component', () => {
   beforeEach(() => {
@@ -25,9 +22,15 @@ describe('Header component', () => {
   });
 
   test('calls toggleTheme when button is clicked', () => {
-    render(<Header />);
-    const button = screen.getByRole('button', { name: /Change Theme/i });
+    render(
+      <ThemeContext.Provider
+        value={{ theme: 'light', toggleTheme: toggleThemeMock }}
+      >
+        <Header />
+      </ThemeContext.Provider>
+    );
 
+    const button = screen.getByRole('button', { name: /Change Theme/i });
     fireEvent.click(button);
 
     expect(toggleThemeMock).toHaveBeenCalledTimes(1);
