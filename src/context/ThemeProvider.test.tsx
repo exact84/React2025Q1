@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider } from './ThemeProvider';
-import { ThemeContextType, ThemeContext } from './index';
+import { ThemeContextType, ThemeContext } from './ThemeContext';
 
 describe('ThemeProvider', () => {
   beforeEach(() => {

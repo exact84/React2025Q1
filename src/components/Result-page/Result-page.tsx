@@ -7,7 +7,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 // import { store, ShowDetails, HideDetails } from '../../store';
 // import { setId } from '../../store/slices/detailsSlice';
 // import { useDispatch } from 'react-redux';
-import { ThemeContext } from '../../context';
+import { ThemeContext } from '../../context/ThemeContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../../store/simpleStore';
 
 interface CharacterListProps {
   characters: Character[];
@@ -23,7 +25,14 @@ export default function ResultPage(props: CharacterListProps) {
   const context = useContext(ThemeContext);
   const [isError, setIsError] = useState(false);
 
-  // const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  const checkedItems = useSelector((state: RootState) => state.items);
+
+  const [cartVisible, setCartVisible] = useState(false);
+  useEffect(() => {
+    setCartVisible(checkedItems.length > 0);
+    console.log('изменился checkedItems');
+  }, [checkedItems]);
 
   const navigate = useNavigate();
   const currentId = useParams().id;
@@ -49,16 +58,33 @@ export default function ResultPage(props: CharacterListProps) {
   //   return unsubscribe;
   // }, []);
 
-  const handleChooseItem = (character: Character) => {
-    const id = extractIdFromUrl(character.url);
-    // if (id) dispatch(setId(Number(id)));
-    // else dispatch(setId(-1));
+  const handleCheckItem = (e: HTMLInputElement, id: string) => {
+    // const target = e as HTMLElement;
+    console.log('INPUT');
+    if (e.checked) dispatch({ type: 'ADD_ITEM', payload: id });
+    else dispatch({ type: 'DEL_ITEM', payload: id });
+  };
 
-    if (currentId === id) {
+  const handleChooseItem = (
+    e: React.MouseEvent<HTMLElement>,
+    character: Character
+  ) => {
+    const id = extractIdFromUrl(character.url);
+    if ((e.target as HTMLElement).tagName === 'INPUT') {
+      handleCheckItem(e as unknown as HTMLInputElement, id);
+      // const target = e.target as HTMLInputElement;
+      // console.log('INPUT');
+      // if (target.checked) dispatch({ type: 'ADD_ITEM', payload: id });
+      // else dispatch({ type: 'DEL_ITEM', payload: id });
+    } else if (currentId === id) {
       navigate(`/?query=${searchQuery}&page=${currentPage}`);
     } else {
       navigate(`/details/${id}?query=${searchQuery}&page=${currentPage}`);
     }
+  };
+
+  const handleDeleteAll = () => {
+    dispatch({ type: 'DEL_ALL' });
   };
 
   const extractIdFromUrl = (url: string): string => {
@@ -84,11 +110,24 @@ export default function ResultPage(props: CharacterListProps) {
                     <li
                       key={character.url}
                       className={styles.character}
-                      onClick={() => handleChooseItem(character)}
+                      onClick={(e) => handleChooseItem(e, character)}
                     >
+                      <input
+                        type="checkbox"
+                        checked={checkedItems.includes(
+                          extractIdFromUrl(character.url)
+                        )}
+                        onChange={(e) =>
+                          handleCheckItem(
+                            e.target,
+                            extractIdFromUrl(character.url)
+                          )
+                        }
+                      ></input>
                       <h3 className={styles.character_name}>
                         {character.name}
                       </h3>
+                      <br />
                       <span className={styles.character_property}>
                         <strong>Height:</strong> {character.height},
                       </span>
@@ -101,6 +140,18 @@ export default function ResultPage(props: CharacterListProps) {
                     </li>
                   ))}
                 </ul>
+                <div
+                  className={`${styles['flyout-element']} ${
+                    cartVisible ? styles.active : styles.hidden
+                  }`}
+                >
+                  <button onClick={handleDeleteAll}>Unselect all</button>
+                  <h3>
+                    <i>{checkedItems.length} items are selected</i>
+                  </h3>
+                  <button>Download</button>
+                </div>
+                <hr></hr>
                 <div>
                   <button
                     onClick={() => props.onPageChange(props.currentPage - 1)}

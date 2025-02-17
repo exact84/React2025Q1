@@ -23,6 +23,11 @@ li.character {
 /* border: green solid 1px; */
 /* } */
 
+input[type='checkbox'] {
+  /* padding: 0 5px; */
+  margin: 0 10px;
+}
+
 ul.character {
   margin: 0;
   padding: 0;
@@ -36,6 +41,7 @@ ul.character {
 }
 
 .character_name {
+  display: inline-block;
   margin: 0;
   padding: 0;
 }
@@ -45,12 +51,32 @@ ul.character {
   padding: 0;
 }
 
+.flyout-element {
+  display: flex;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.3s ease,
+    max-height 0.3s ease;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flyout-element.active {
+  max-height: 500px;
+  opacity: 1;
+  transition:
+    opacity 0.3s ease,
+    max-height 0.3s ease;
+}
+
 .button {
   max-width: 150px;
   align-self: center;
 }
 
-.active {
+button.active {
   color: var(--page-activ);
   font-size: x-large;
   font-weight: bold;

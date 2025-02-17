@@ -43,10 +43,6 @@ import detailsReducer from './slices/detailsSlice';
 //   }
 // };
 
-// export const store = configureStore({
-//   reducer: {
-//     detaisReducer: reducer,
-//   },
 // });
 
 export const store = configureStore({

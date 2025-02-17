@@ -2,29 +2,33 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import ResultPage from '../Result-page/Result-page';
 import { vi } from 'vitest';
+import { Provider } from 'react-redux';
+import { store } from '../../store/simpleStore';
 
 describe('ResultPage Component', () => {
   it('renders the specified number of cards', async () => {
     render(
-      <MemoryRouter>
-        <ResultPage
-          characters={[
-            {
-              name: 'Luke Skywalker',
-              height: '172',
-              hair_color: 'blond',
-              gender: 'male',
-              url: 'https://swapi.dev/api/people/1/',
-            },
-          ]}
-          currentPage={1}
-          totalPages={1}
-          errorAPI=""
-          isLoading={false}
-          onPageChange={() => {}}
-          searchQuery="Luke"
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResultPage
+            characters={[
+              {
+                name: 'Luke Skywalker',
+                height: '172',
+                hair_color: 'blond',
+                gender: 'male',
+                url: 'https://swapi.dev/api/people/1/',
+              },
+            ]}
+            currentPage={1}
+            totalPages={1}
+            errorAPI=""
+            isLoading={false}
+            onPageChange={() => {}}
+            searchQuery="Luke"
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -34,17 +38,19 @@ describe('ResultPage Component', () => {
 
   it('displays a message if no cards are present', async () => {
     render(
-      <MemoryRouter>
-        <ResultPage
-          characters={[]}
-          currentPage={1}
-          totalPages={0}
-          errorAPI=""
-          isLoading={false}
-          onPageChange={() => {}}
-          searchQuery=""
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResultPage
+            characters={[]}
+            currentPage={1}
+            totalPages={0}
+            errorAPI=""
+            isLoading={false}
+            onPageChange={() => {}}
+            searchQuery=""
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -54,17 +60,19 @@ describe('ResultPage Component', () => {
 
   it('displays a loader when isLoading is true', async () => {
     render(
-      <MemoryRouter>
-        <ResultPage
-          characters={[]}
-          currentPage={1}
-          totalPages={0}
-          errorAPI=""
-          isLoading={true}
-          onPageChange={() => {}}
-          searchQuery=""
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResultPage
+            characters={[]}
+            currentPage={1}
+            totalPages={0}
+            errorAPI=""
+            isLoading={true}
+            onPageChange={() => {}}
+            searchQuery=""
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -76,25 +84,27 @@ describe('ResultPage Component', () => {
     const mockOnPageChange = vi.fn();
 
     render(
-      <MemoryRouter>
-        <ResultPage
-          characters={[
-            {
-              name: 'Luke Skywalker',
-              height: '172',
-              hair_color: 'blond',
-              gender: 'male',
-              url: 'https://swapi.dev/api/people/1/',
-            },
-          ]}
-          currentPage={1}
-          totalPages={3}
-          errorAPI=""
-          isLoading={false}
-          onPageChange={mockOnPageChange}
-          searchQuery="Luke"
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResultPage
+            characters={[
+              {
+                name: 'Luke Skywalker',
+                height: '172',
+                hair_color: 'blond',
+                gender: 'male',
+                url: 'https://swapi.dev/api/people/1/',
+              },
+            ]}
+            currentPage={1}
+            totalPages={3}
+            errorAPI=""
+            isLoading={false}
+            onPageChange={mockOnPageChange}
+            searchQuery="Luke"
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     const prevButton = screen.getByText('◀');
@@ -111,17 +121,19 @@ describe('ResultPage Component', () => {
 
   it('throws an error when the error button is clicked', async () => {
     render(
-      <MemoryRouter>
-        <ResultPage
-          characters={[]}
-          currentPage={1}
-          totalPages={0}
-          errorAPI=""
-          isLoading={false}
-          onPageChange={() => {}}
-          searchQuery=""
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResultPage
+            characters={[]}
+            currentPage={1}
+            totalPages={0}
+            errorAPI=""
+            isLoading={false}
+            onPageChange={() => {}}
+            searchQuery=""
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     const errorButton = screen.getByText('Error Button');
