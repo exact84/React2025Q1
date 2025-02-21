@@ -27,7 +27,6 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   handleSearch() {
-    // console.log('somehig');
     this.props.onSearch(this.props.searchQuery);
   }
 

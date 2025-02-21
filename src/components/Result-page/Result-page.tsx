@@ -4,9 +4,6 @@ import Loader from '../Loader/Loader';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
-// import { store, ShowDetails, HideDetails } from '../../store';
-// import { setId } from '../../store/slices/detailsSlice';
-// import { useDispatch } from 'react-redux';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/simpleStore';
@@ -31,7 +28,6 @@ export default function ResultPage(props: CharacterListProps) {
   const [cartVisible, setCartVisible] = useState(false);
   useEffect(() => {
     setCartVisible(checkedItems.length > 0);
-    console.log('изменился checkedItems');
   }, [checkedItems]);
 
   const navigate = useNavigate();
@@ -47,22 +43,10 @@ export default function ResultPage(props: CharacterListProps) {
 
   const { characters, errorAPI, isLoading, currentPage, searchQuery } = props;
 
-  // const [, forceUpdate] = useReducer((x) => {
-  //   x + 1, 0;
-  // });
-
-  // useEffect(() => {
-  //   const unsubscribe = store.subscribe(() => {
-  //     forceUpdate();
-  //   });
-  //   return unsubscribe;
-  // }, []);
-
-  const handleCheckItem = (e: HTMLInputElement, id: string) => {
-    // const target = e as HTMLElement;
-    console.log('INPUT');
-    if (e.checked) dispatch({ type: 'ADD_ITEM', payload: id });
-    else dispatch({ type: 'DEL_ITEM', payload: id });
+  const handleCheckItem = (e: HTMLInputElement, item: Character) => {
+    if (e.checked) dispatch({ type: 'ADD_ITEM', payload: item });
+    else dispatch({ type: 'DEL_ITEM', payload: item });
+    console.log(checkedItems);
   };
 
   const handleChooseItem = (
@@ -71,11 +55,7 @@ export default function ResultPage(props: CharacterListProps) {
   ) => {
     const id = extractIdFromUrl(character.url);
     if ((e.target as HTMLElement).tagName === 'INPUT') {
-      handleCheckItem(e as unknown as HTMLInputElement, id);
-      // const target = e.target as HTMLInputElement;
-      // console.log('INPUT');
-      // if (target.checked) dispatch({ type: 'ADD_ITEM', payload: id });
-      // else dispatch({ type: 'DEL_ITEM', payload: id });
+      handleCheckItem(e as unknown as HTMLInputElement, character);
     } else if (currentId === id) {
       navigate(`/?query=${searchQuery}&page=${currentPage}`);
     } else {
@@ -85,6 +65,22 @@ export default function ResultPage(props: CharacterListProps) {
 
   const handleDeleteAll = () => {
     dispatch({ type: 'DEL_ALL' });
+  };
+
+  const handleDownload = () => {
+    const headersCharacter: Array<keyof Character> = Object.keys(
+      checkedItems[0]
+    ) as Array<keyof Character>;
+    const records = checkedItems.map((item) =>
+      headersCharacter.map((header) => item[header]).join(',')
+    );
+    const CSVdata = headersCharacter.join(',') + '\n' + records.join('\n');
+    const blob = new Blob([CSVdata], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = checkedItems.length.toString() + '_characters';
+
+    link.click();
   };
 
   const extractIdFromUrl = (url: string): string => {
@@ -114,15 +110,10 @@ export default function ResultPage(props: CharacterListProps) {
                     >
                       <input
                         type="checkbox"
-                        checked={checkedItems.includes(
-                          extractIdFromUrl(character.url)
+                        checked={checkedItems.some(
+                          (item) => item.url === character.url
                         )}
-                        onChange={(e) =>
-                          handleCheckItem(
-                            e.target,
-                            extractIdFromUrl(character.url)
-                          )
-                        }
+                        onChange={(e) => handleCheckItem(e.target, character)}
                       ></input>
                       <h3 className={styles.character_name}>
                         {character.name}
@@ -149,7 +140,7 @@ export default function ResultPage(props: CharacterListProps) {
                   <h3>
                     <i>{checkedItems.length} items are selected</i>
                   </h3>
-                  <button>Download</button>
+                  <button onClick={handleDownload}>Download</button>
                 </div>
                 <hr></hr>
                 <div>

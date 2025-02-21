@@ -7,7 +7,7 @@ export default function Header() {
 
   return (
     <div className="rowBox">
-      <h1>Task2 &quot;Redux. Context api.&quot;</h1>
+      <h1>Task3 &quot;Redux. Context api.&quot;</h1>
       <button onClick={context.toggleTheme}>Change Theme</button>
     </div>
   );

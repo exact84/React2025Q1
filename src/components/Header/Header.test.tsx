@@ -14,7 +14,7 @@ describe('Header component', () => {
     render(<Header />);
 
     expect(
-      screen.getByText(/Task2 "Redux\. Context api\."/i)
+      screen.getByText(/Task3 "Redux\. Context api\."/i)
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Change Theme/i })
