@@ -1,7 +1,7 @@
 import { Character } from '../../types/characterTypes';
 import styles from './Result-page.module.css';
 import Loader from '../Loader/Loader';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -19,6 +19,7 @@ interface CharacterListProps {
 }
 
 export default function ResultPage(props: CharacterListProps) {
+  const linkRef = useRef<HTMLAnchorElement>(null);
   const context = useContext(ThemeContext);
   const [isError, setIsError] = useState(false);
 
@@ -46,7 +47,6 @@ export default function ResultPage(props: CharacterListProps) {
   const handleCheckItem = (e: HTMLInputElement, item: Character) => {
     if (e.checked) dispatch({ type: 'ADD_ITEM', payload: item });
     else dispatch({ type: 'DEL_ITEM', payload: item });
-    console.log(checkedItems);
   };
 
   const handleChooseItem = (
@@ -76,11 +76,14 @@ export default function ResultPage(props: CharacterListProps) {
     );
     const CSVdata = headersCharacter.join(',') + '\n' + records.join('\n');
     const blob = new Blob([CSVdata], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = checkedItems.length.toString() + '_characters';
+    const url = URL.createObjectURL(blob);
 
-    link.click();
+    if (linkRef.current) {
+      linkRef.current.href = url;
+      linkRef.current.download = `${checkedItems.length}_characters.csv`;
+      linkRef.current.click();
+    }
+    URL.revokeObjectURL(url);
   };
 
   const extractIdFromUrl = (url: string): string => {
@@ -141,6 +144,7 @@ export default function ResultPage(props: CharacterListProps) {
                     <i>{checkedItems.length} items are selected</i>
                   </h3>
                   <button onClick={handleDownload}>Download</button>
+                  <a ref={linkRef} style={{ display: 'none' }}></a>
                 </div>
                 <hr></hr>
                 <div>
