@@ -6,7 +6,9 @@ import { Outlet } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../store/simpleStore';
+import { AppDispatch } from '../../store/indexStore';
+import { RootState } from '../../store/indexStore';
+import { addItem, delItem, delAll } from '../../store/slices/checkedItemsSlice';
 
 interface CharacterListProps {
   characters: Character[];
@@ -24,7 +26,7 @@ export default function ResultPage(props: CharacterListProps) {
   const [isError, setIsError] = useState(false);
 
   const dispatch: AppDispatch = useDispatch();
-  const checkedItems = useSelector((state: RootState) => state.items);
+  const checkedItems = useSelector((state: RootState) => state.items.items);
 
   const [cartVisible, setCartVisible] = useState(false);
   useEffect(() => {
@@ -42,11 +44,18 @@ export default function ResultPage(props: CharacterListProps) {
     setIsError(true);
   };
 
-  const { characters, errorAPI, isLoading, currentPage, searchQuery } = props;
+  const {
+    characters,
+    errorAPI,
+    isLoading,
+    currentPage,
+    searchQuery,
+    onPageChange,
+  } = props;
 
   const handleCheckItem = (e: HTMLInputElement, item: Character) => {
-    if (e.checked) dispatch({ type: 'ADD_ITEM', payload: item });
-    else dispatch({ type: 'DEL_ITEM', payload: item });
+    if (e.checked) dispatch(addItem(item));
+    else dispatch(delItem(item));
   };
 
   const handleChooseItem = (
@@ -64,7 +73,7 @@ export default function ResultPage(props: CharacterListProps) {
   };
 
   const handleDeleteAll = () => {
-    dispatch({ type: 'DEL_ALL' });
+    dispatch(delAll());
   };
 
   const handleDownload = () => {
@@ -149,7 +158,7 @@ export default function ResultPage(props: CharacterListProps) {
                 <hr></hr>
                 <div>
                   <button
-                    onClick={() => props.onPageChange(props.currentPage - 1)}
+                    onClick={() => onPageChange(props.currentPage - 1)}
                     disabled={props.currentPage === 1}
                   >
                     ◀

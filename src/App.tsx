@@ -1,23 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 import Header from './components/Header/Header';
 import Search from './components/Search/Search';
 import ResultPage from './components/Result-page/Result-page';
 import Details from './components/Details/Details';
-import { Character } from './types/characterTypes';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useRestoreSearch } from './hooks/useRestoreSearch';
+import getPageCount from './utils/pages';
+import { useCharacters } from './services/swapi';
 
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [errorAPI, setErrorAPI] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [queryString, setQueryString] = useRestoreSearch();
   const searchParams = new URLSearchParams(location.search);
 
@@ -26,10 +22,9 @@ export default function App() {
 
   useEffect(() => {
     setQueryString(query);
-    setCurrentPage(page);
-  }, [query, page, setQueryString, setCurrentPage]);
+  }, [query, setQueryString]);
 
-  const baseUrl = 'https://swapi.dev/api/people/?';
+  const { data, error, isLoading } = useCharacters(query, page);
 
   const handleSearch = (query: string) => {
     navigate(`/?query=${encodeURIComponent(query)}&page=1`);
@@ -39,39 +34,13 @@ export default function App() {
     console.error('Error caught in App:', error);
   }
 
-  const handleRequestAPI = useCallback(
-    async (page: number, query: string) => {
-      setIsLoading(true);
-      let url = baseUrl;
-      if (queryString.trim()) {
-        url += 'search=' + encodeURIComponent(query) + '&';
-      }
-      url += 'page=' + page;
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        setCharacters(data.results);
-        setTotalPages(Math.ceil(data.count / 10));
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error('API Error: ', error.message);
-          setErrorAPI(error.message);
-        } else {
-          console.error('An unknown error occurred: ', error);
-          setErrorAPI('An unknown error occurred');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [queryString]
-  );
+  const getErrorMessage = (error: unknown) => {
+    if (typeof error === 'string') return error;
+    if (error && typeof error === 'object' && 'status' in error)
+      return `Error ${error.status}`;
+    return 'An unknown error occurred';
+  };
 
-  useEffect(() => {
-    handleRequestAPI(page, query);
-  }, [page, query, handleRequestAPI]);
-
-  console.log('рендер App');
   return (
     <ErrorBoundary
       onError={handleError}
@@ -85,13 +54,12 @@ export default function App() {
           path="/"
           element={
             <ResultPage
-              characters={characters}
-              errorAPI={errorAPI}
+              characters={data?.results || []}
+              errorAPI={error ? getErrorMessage(error) : ''}
               isLoading={isLoading}
-              currentPage={currentPage}
-              totalPages={totalPages}
+              currentPage={page}
+              totalPages={getPageCount(data?.count, 10)}
               onPageChange={(newPage) => {
-                setCurrentPage(newPage);
                 navigate(
                   `/?query=${encodeURIComponent(query)}&page=${newPage}`
                 );
