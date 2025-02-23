@@ -6,9 +6,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as ThemeType;
-    if (savedTheme) {
+    if (savedTheme === 'light' || savedTheme === 'dark') {
       setTheme(savedTheme);
       document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      localStorage.setItem('theme', 'light');
     }
   }, []);
 

@@ -4,6 +4,7 @@ import ResultPage from './ResultPage';
 import { vi } from 'vitest';
 import { Provider } from 'react-redux';
 import { store } from '../../store/indexStore';
+import { delAll } from '../../store/slices/checkedItemsSlice';
 
 describe('ResultPage Component', () => {
   it('renders the specified number of cards', async () => {
@@ -138,5 +139,79 @@ describe('ResultPage Component', () => {
 
     const errorButton = screen.getByText('Error Button');
     expect(() => fireEvent.click(errorButton)).toThrow('This is a test error!');
+  });
+
+  it('checking items', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResultPage
+            characters={[
+              {
+                name: 'Leia Organa',
+                height: '150',
+                hair_color: 'brown',
+                gender: 'female',
+                url: 'https://swapi.dev/api/people/5/',
+              },
+            ]}
+            currentPage={1}
+            totalPages={1}
+            errorAPI=""
+            isLoading={false}
+            onPageChange={() => {}}
+            searchQuery="Leia"
+          />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+
+    expect(screen.getByText(/1 items are selected/i)).toBeInTheDocument();
+  });
+
+  beforeEach(() => {
+    store.dispatch(delAll());
+  });
+
+  it('add and delete items at store', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResultPage
+            characters={[
+              {
+                name: 'Darth Vader',
+                height: '202',
+                hair_color: 'none',
+                gender: 'male',
+                url: 'https://swapi.dev/api/people/4/',
+              },
+            ]}
+            currentPage={1}
+            totalPages={1}
+            errorAPI=""
+            isLoading={false}
+            onPageChange={() => {}}
+            searchQuery="Darth"
+          />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    const button = screen.getByText('Unselect all');
+
+    fireEvent.click(checkbox);
+    expect(store.getState().items.items).toHaveLength(1);
+
+    fireEvent.click(checkbox);
+    expect(store.getState().items.items).toHaveLength(0);
+
+    fireEvent.click(checkbox);
+    fireEvent.click(button);
+    expect(store.getState().items.items).toHaveLength(0);
   });
 });

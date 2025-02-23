@@ -1,22 +1,44 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider } from './ThemeProvider';
-import { ThemeContextType, ThemeContext } from './ThemeContext';
+import { ThemeContext } from './ThemeContext';
+import { useContext } from 'react';
+import { describe, it, expect, beforeEach } from 'vitest';
+
+const TestComponent = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  return (
+    <div>
+      <div data-testid="theme">{theme}</div>
+      <button data-testid="toggle-button" onClick={toggleTheme}>
+        Toggle Theme
+      </button>
+    </div>
+  );
+};
 
 describe('ThemeProvider', () => {
   beforeEach(() => {
     localStorage.clear();
+    document.documentElement.removeAttribute('data-theme');
   });
 
-  test('initializes theme from localStorage', () => {
+  it('should use default theme (light)', () => {
+    render(
+      <ThemeProvider>
+        <TestComponent />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByTestId('theme')).toHaveTextContent('light');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+  });
+
+  it('should load from localStorage', () => {
     localStorage.setItem('theme', 'dark');
 
     render(
       <ThemeProvider>
-        <ThemeContext.Consumer>
-          {({ theme }: ThemeContextType) => (
-            <div data-testid="theme">{theme}</div>
-          )}
-        </ThemeContext.Consumer>
+        <TestComponent />
       </ThemeProvider>
     );
 
@@ -24,75 +46,42 @@ describe('ThemeProvider', () => {
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
   });
 
-  test('uses light theme by default if localStorage is empty', () => {
+  it('should switch theme', () => {
     render(
       <ThemeProvider>
-        <ThemeContext.Consumer>
-          {({ theme }: ThemeContextType) => (
-            <div data-testid="theme">{theme}</div>
-          )}
-        </ThemeContext.Consumer>
+        <TestComponent />
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId('theme')).toHaveTextContent('light');
-    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
-  });
-
-  test('toggles theme between light and dark', () => {
-    render(
-      <ThemeProvider>
-        <ThemeContext.Consumer>
-          {({ theme, toggleTheme }: ThemeContextType) => (
-            <div>
-              <div data-testid="theme">{theme}</div>
-              <button onClick={toggleTheme}>Toggle Theme</button>
-            </div>
-          )}
-        </ThemeContext.Consumer>
-      </ThemeProvider>
-    );
+    const toggleButton = screen.getByTestId('toggle-button');
 
     expect(screen.getByTestId('theme')).toHaveTextContent('light');
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
 
-    const toggleButton = screen.getByText('Toggle Theme');
     fireEvent.click(toggleButton);
-
     expect(screen.getByTestId('theme')).toHaveTextContent('dark');
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     expect(localStorage.getItem('theme')).toBe('dark');
 
     fireEvent.click(toggleButton);
-
     expect(screen.getByTestId('theme')).toHaveTextContent('light');
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     expect(localStorage.getItem('theme')).toBe('light');
   });
 
-  test('updates document and localStorage when theme changes', () => {
+  it('should refresh localStorage', () => {
     render(
       <ThemeProvider>
-        <ThemeContext.Consumer>
-          {({ theme, toggleTheme }: ThemeContextType) => (
-            <div>
-              <div data-testid="theme">{theme}</div>
-              <button onClick={toggleTheme}>Toggle Theme</button>
-            </div>
-          )}
-        </ThemeContext.Consumer>
+        <TestComponent />
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId('theme')).toHaveTextContent('light');
-    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
-    expect(localStorage.getItem('theme')).toBe('light');
+    const toggleButton = screen.getByTestId('toggle-button');
 
-    const toggleButton = screen.getByText('Toggle Theme');
     fireEvent.click(toggleButton);
-
-    expect(screen.getByTestId('theme')).toHaveTextContent('dark');
-    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     expect(localStorage.getItem('theme')).toBe('dark');
+
+    fireEvent.click(toggleButton);
+    expect(localStorage.getItem('theme')).toBe('light');
   });
 });
