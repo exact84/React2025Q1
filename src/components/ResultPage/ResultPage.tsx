@@ -1,5 +1,5 @@
 import { Character } from '../../types/characterTypes';
-import styles from './Result-page.module.css';
+import styles from './ResultPage.module.css';
 import Loader from '../Loader/Loader';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -84,7 +84,8 @@ export default function ResultPage(props: CharacterListProps) {
       headersCharacter.map((header) => item[header]).join(',')
     );
     const CSVdata = headersCharacter.join(',') + '\n' + records.join('\n');
-    const blob = new Blob([CSVdata], { type: 'text/csv;charset=utf-8;' });
+    const CSV_BLOB_TYPE = 'text/csv;charset=utf-8;';
+    const blob = new Blob([CSVdata], { type: CSV_BLOB_TYPE });
     const url = URL.createObjectURL(blob);
 
     if (linkRef.current) {

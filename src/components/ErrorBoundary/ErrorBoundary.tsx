@@ -1,5 +1,5 @@
 import { Component, ReactNode } from 'react';
-import Search from '../Search/Search';
+import { Search } from '../';
 
 interface Props {
   children: ReactNode;
@@ -12,7 +12,7 @@ interface State {
   hasError: boolean;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+export default class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
@@ -31,7 +31,6 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   render() {
-    console.log('рендер Boundary');
     if (this.state.hasError)
       return (
         <>

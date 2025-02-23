@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import './App.css';
-import Header from './components/Header/Header';
-import Search from './components/Search/Search';
-import ResultPage from './components/Result-page/Result-page';
-import Details from './components/Details/Details';
-import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+import {
+  Header,
+  Search,
+  ResultPage,
+  Details,
+  ErrorBoundary,
+} from './components/';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useRestoreSearch } from './hooks/useRestoreSearch';
 import getPageCount from './utils/pages';

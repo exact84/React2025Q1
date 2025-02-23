@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import ResultPage from '../Result-page/Result-page';
+import ResultPage from './ResultPage';
 import { vi } from 'vitest';
 import { Provider } from 'react-redux';
 import { store } from '../../store/indexStore';

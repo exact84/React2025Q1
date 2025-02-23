@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-// import { waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { ErrorBoundary } from '../';
 
 describe('ErrorBoundary component', () => {
   test('renders child components without errors', () => {
@@ -37,15 +36,7 @@ describe('ErrorBoundary component', () => {
     expect(onErrorMock).toHaveBeenCalled();
 
     const returnButton = screen.getByText('Return');
-    // console.log(returnButton, '---------------------------');
     fireEvent.click(returnButton);
-
-    // await waitFor(() => {
-    //   expect(
-    //     screen.queryByText('An Error occurred but handled')
-    //   ).not.toBeInTheDocument();
-    //   expect(screen.getByText('Child Component')).toBeInTheDocument();
-    // });
   });
 
   test('calls onSearch when handleSearch is triggered', () => {

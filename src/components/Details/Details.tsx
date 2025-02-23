@@ -1,5 +1,5 @@
 import { Character } from 'src/types/characterTypes';
-import styles from '../Result-page/Result-page.module.css';
+import styles from '../ResultPage/ResultPage.module.css';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -54,7 +54,6 @@ export default function Details() {
     navigate(`/?query=${searchQuery}&page=${currentPage}`);
   };
 
-  console.log('рендер Details.');
   return (
     <div className={styles.details}>
       <ul className={styles.character}>
