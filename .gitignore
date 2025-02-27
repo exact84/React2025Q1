@@ -29,3 +29,6 @@ coverage/
 
 # Ignore environment variables
 .env
+
+# Next.js build output
+.next
