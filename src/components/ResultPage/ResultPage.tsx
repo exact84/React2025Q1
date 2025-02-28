@@ -2,13 +2,14 @@ import { Character } from '../../types/characterTypes';
 import styles from './ResultPage.module.css';
 import Loader from '../Loader/Loader';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import { useNavigate, useParams } from 'react-router-dom';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/indexStore';
 import { RootState } from '../../store/indexStore';
 import { addItem, delItem, delAll } from '../../store/slices/checkedItemsSlice';
+import { useRouter } from 'next/router';
+// import Details from '../../pages/details/[id]';
+import Details from '../Details/Details';
 
 interface CharacterListProps {
   characters: Character[];
@@ -33,8 +34,8 @@ export default function ResultPage(props: CharacterListProps) {
     setCartVisible(checkedItems.length > 0);
   }, [checkedItems]);
 
-  const navigate = useNavigate();
-  const currentId = useParams().id;
+  const router = useRouter();
+  const currentId = router.query.id;
 
   useEffect(() => {
     if (isError) throw new Error('This is a test error! ');
@@ -63,12 +64,13 @@ export default function ResultPage(props: CharacterListProps) {
     character: Character
   ) => {
     const id = extractIdFromUrl(character.url);
+    // console.log('currentId: ', currentId, 'character.url id: ', id);
     if ((e.target as HTMLElement).tagName === 'INPUT') {
       handleCheckItem(e as unknown as HTMLInputElement, character);
     } else if (currentId === id) {
-      navigate(`/?query=${searchQuery}&page=${currentPage}`);
+      router.push(`/?query=${searchQuery}&page=${currentPage}`);
     } else {
-      navigate(`/details/${id}?query=${searchQuery}&page=${currentPage}`);
+      router.push(`/?id=${id}&query=${searchQuery}&page=${currentPage}`);
     }
   };
 
@@ -123,6 +125,7 @@ export default function ResultPage(props: CharacterListProps) {
                     >
                       <input
                         type="checkbox"
+                        className="default"
                         checked={checkedItems.some(
                           (item) => item.url === character.url
                         )}
@@ -200,7 +203,7 @@ export default function ResultPage(props: CharacterListProps) {
           </div>
           {currentId ? (
             <div className={styles.details_container}>
-              <Outlet />
+              <Details />
             </div>
           ) : (
             <></>

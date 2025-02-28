@@ -20,7 +20,7 @@ function Search(props: Props) {
 
   return (
     <>
-      <section className={styles.top}>
+      <section className={styles.container}>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

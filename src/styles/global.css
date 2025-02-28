@@ -27,12 +27,18 @@
   --page-activ: #4caf50;
 }
 
+.root-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  text-align: center;
+}
+
 body {
   margin-top: 10px;
   background-color: var(--primary-color);
   color: var(--text-color);
-  /* font-family: Arial, sans-serif; */
   display: flex;
+  justify-content: center;
   min-width: 320px;
   min-height: 98vh;
   transition:
@@ -43,4 +49,49 @@ body {
 .rowBox {
   display: flex;
   justify-content: space-around;
+}
+
+input[type='text'] {
+  width: 100%;
+  max-width: 200px;
+  padding: 10px;
+  margin: 10px 5px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+input[type='text']:focus {
+  border-color: var(--button-color);
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+
+button {
+  background-color: var(--button-color);
+  border-color: var(--border-color);
+  color: white;
+  margin: 10px 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+button.choosen {
+  background-color: var(--border-color);
+}
+
+button:hover {
+  background-color: var(--hover-color);
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(1);
 }

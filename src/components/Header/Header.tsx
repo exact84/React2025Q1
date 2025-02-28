@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
-import '../../styles/global.css';
 
 export default function Header() {
   const context = useContext(ThemeContext);

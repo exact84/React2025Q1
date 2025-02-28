@@ -1,20 +1,17 @@
 import { Character } from 'src/types/characterTypes';
 import styles from '../ResultPage/ResultPage.module.css';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Loader from '../Loader/Loader';
+import { useRouter } from 'next/router';
 
 export default function Details() {
-  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const { id } = router.query;
   const [character, setCharacter] = useState<Character | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get('query') || '';
-  const currentPage = searchParams.get('page') || '1';
-
-  const navigate = useNavigate();
+  const searchQuery = router.query.query || '';
+  const currentPage = router.query.page || '1';
 
   useEffect(() => {
     const fetchCharacter = async () => {
@@ -51,7 +48,7 @@ export default function Details() {
     return <p>Person not found</p>;
   }
   const handleCloseClick = () => {
-    navigate(`/?query=${searchQuery}&page=${currentPage}`);
+    router.push(`/?query=${searchQuery}&page=${currentPage}`);
   };
 
   return (

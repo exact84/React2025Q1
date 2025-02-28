@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/indexStore';
 import { ThemeProvider } from './context/ThemeProvider';
 
-const basename = import.meta.env.BASE_URL || '/';
+const basename = process.env.BASE_URL || '/';
 const rootElement = document.getElementById('root') as HTMLElement;
 createRoot(rootElement).render(
   <StrictMode>

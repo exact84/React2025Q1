@@ -6,8 +6,6 @@
 .list {
   display: flex;
   flex-direction: column;
-  /* justify-content: flex-end; */
-  /* align-items: flex-end; */
   width: 100%;
 }
 
@@ -17,14 +15,7 @@ li.character {
   border: var(--border-color) solid 1px;
 }
 
-/* li.character-info { */
-/* margin: 0; */
-/* padding: 3px; */
-/* border: green solid 1px; */
-/* } */
-
-input[type='checkbox'] {
-  /* padding: 0 5px; */
+input[type='checkbox'].default {
   margin: 0 10px;
 }
 
