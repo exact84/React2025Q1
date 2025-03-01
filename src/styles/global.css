@@ -34,17 +34,32 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   margin-top: 10px;
   background-color: var(--primary-color);
   color: var(--text-color);
   display: flex;
-  justify-content: center;
+  align-content: center;
   min-width: 320px;
   min-height: 98vh;
   transition:
     background-color 0.3s,
     color 0.3s;
 }
+
+.main {
+  display: flex;
+  align-items: center;
+  /* flex: 0 1 auto; */
+  justify-self: center;
+  margin: 10px 10px;
+}
+
+/* .list {
+  display: flex;
+  flex-direction: column;
+} */
 
 .rowBox {
   display: flex;

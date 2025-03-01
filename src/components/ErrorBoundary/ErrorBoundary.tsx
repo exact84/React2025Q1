@@ -33,7 +33,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError)
       return (
-        <>
+        <div className="root-container">
           <Search onSearch={this.handleSearch} searchQuery={''} />
           <h1>An Error occurred but handled</h1>
           <div>------------------------------</div>
@@ -44,7 +44,7 @@ export default class ErrorBoundary extends Component<Props, State> {
           >
             Return
           </button>
-        </>
+        </div>
       );
     return this.props.children;
   }

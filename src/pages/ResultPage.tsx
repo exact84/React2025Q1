@@ -1,15 +1,15 @@
-import { Character } from '../../types/characterTypes';
+/* eslint-disable react-refresh/only-export-components */
+import { Character } from 'types/characterTypes';
 import styles from './ResultPage.module.css';
-import Loader from '../Loader/Loader';
+import Loader from '../components/Loader/Loader';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { ThemeContext } from '../../context/ThemeContext';
+import { ThemeContext } from '../context/ThemeContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/indexStore';
-import { RootState } from '../../store/indexStore';
-import { addItem, delItem, delAll } from '../../store/slices/checkedItemsSlice';
+import { AppDispatch, RootState } from '../store/indexStore';
+import { addItem, delItem, delAll } from '../store/slices/checkedItemsSlice';
 import { useRouter } from 'next/router';
-// import Details from '../../pages/details/[id]';
-import Details from '../Details/Details';
+import { extractIdFromUrl } from '../utils/extractIdFromUrl';
+import { getServerSideProps } from './characterData';
 
 interface CharacterListProps {
   characters: Character[];
@@ -69,8 +69,11 @@ export default function ResultPage(props: CharacterListProps) {
       handleCheckItem(e as unknown as HTMLInputElement, character);
     } else if (currentId === id) {
       router.push(`/?query=${searchQuery}&page=${currentPage}`);
+      console.log('currentId: ', currentId, 'character.url id: ', id);
     } else {
-      router.push(`/?id=${id}&query=${searchQuery}&page=${currentPage}`);
+      router.push(
+        `/details/${extractIdFromUrl(character.url)}?query=${searchQuery}&page=${currentPage}`
+      );
     }
   };
 
@@ -98,21 +101,16 @@ export default function ResultPage(props: CharacterListProps) {
     URL.revokeObjectURL(url);
   };
 
-  const extractIdFromUrl = (url: string): string => {
-    const parts = url.split('/');
-    return parts[parts.length - 2];
-  };
-
   if (!characters) {
     return <div>Error 404.</div>;
   }
 
   return (
-    <section className={styles.results}>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
+    <>
+      <section className={styles.results}>
+        {isLoading ? (
+          <Loader />
+        ) : (
           <div className={styles.list}>
             {characters.length > 0 ? (
               <>
@@ -201,15 +199,10 @@ export default function ResultPage(props: CharacterListProps) {
               </button>
             </div>
           </div>
-          {currentId ? (
-            <div className={styles.details_container}>
-              <Details />
-            </div>
-          ) : (
-            <></>
-          )}
-        </>
-      )}
-    </section>
+        )}
+      </section>
+    </>
   );
 }
+
+export { getServerSideProps };

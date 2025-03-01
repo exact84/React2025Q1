@@ -1,12 +1,39 @@
 import { StrictMode } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/global.css';
 import { Provider } from 'react-redux';
 import { store } from '../store/indexStore';
 import { ThemeProvider } from '../context/ThemeProvider';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import Home from './Home';
+
+import Loader from '@components/Loader/Loader';
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const isDetailsPage = router.pathname.startsWith('/details');
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      setLoading(true);
+    };
+
+    const handleRouteChangeComplete = () => {
+      setLoading(false);
+    };
+
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+    };
+  }, [router]);
+
   return (
     <StrictMode>
       <ThemeProvider>
@@ -14,9 +41,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Head>
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <div className="root-container">
-            <Component {...pageProps} />
-          </div>
+          <main className="main">
+            <Home />
+            {!isDetailsPage && <Component {...pageProps} />}
+            {loading ? <Loader /> : <Component {...pageProps} />}
+            {/* <Component {...pageProps} /> */}
+          </main>
         </Provider>
       </ThemeProvider>
     </StrictMode>
