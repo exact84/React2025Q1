@@ -13,9 +13,7 @@ describe('Header component', () => {
   test('renders header title and button', () => {
     render(<Header />);
 
-    expect(
-      screen.getByText(/Task3 "Redux\. Context api\."/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Task4/i)).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Change Theme/i })
     ).toBeInTheDocument();
