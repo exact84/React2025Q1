@@ -1,51 +1,53 @@
-import { Component, ReactNode } from 'react';
-import { Search } from '../';
+// components/ErrorBoundary.js
+import React, { Component } from 'react';
 
-interface Props {
-  children: ReactNode;
-  onError: (error: Error) => void;
-  onSearch: (queryString: string) => void;
-  searchQuery: string;
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
 }
 
-export default class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    };
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error, errorInfo: null };
   }
 
-  componentDidCatch(error: Error): void {
-    this.props.onError(error);
-  }
-
-  handleSearch() {
-    this.props.onSearch(this.props.searchQuery);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    this.setState({ error, errorInfo });
   }
 
   render() {
-    if (this.state.hasError)
+    const { hasError, error } = this.state;
+    const { children, fallback } = this.props;
+
+    if (hasError) {
       return (
-        <div className="root-container">
-          <Search onSearch={this.handleSearch} searchQuery={''} />
-          <h1>An Error occurred but handled</h1>
-          <div>------------------------------</div>
-          <button
-            onClick={() => {
-              this.setState({ hasError: false });
-            }}
-          >
-            Return
-          </button>
-        </div>
+        fallback || (
+          <div style={{ padding: '20px', color: 'red' }}>
+            <h2>Something went wrong!</h2>
+            <p>{error?.toString()}</p>
+          </div>
+        )
       );
-    return this.props.children;
+    }
+
+    return children;
   }
 }
+
+export default ErrorBoundary;

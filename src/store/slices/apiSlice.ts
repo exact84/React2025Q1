@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { Character } from 'types/characterTypes';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -10,7 +11,10 @@ export const apiSlice = createApi({
       query: ({ query, page }) =>
         `people/?search=${encodeURIComponent(query)}&page=${page}`,
     }),
+    getCharacter: builder.query<Character, string>({
+      query: (id) => `people/${id}`,
+    }),
   }),
 });
 
-export const { useGetCharactersQuery } = apiSlice;
+export const { useGetCharactersQuery, useGetCharacterQuery } = apiSlice;

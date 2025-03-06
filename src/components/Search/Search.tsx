@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import styles from './Search.module.css';
+import { useRouter } from 'next/router';
 
-interface Props {
-  onSearch: (queryString: string) => void;
-  searchQuery: string;
-}
-
-function Search(props: Props) {
-  const [queryString, setQueryString] = useState(props.searchQuery || '');
+function Search() {
+  const [query, setQuery] = useState('');
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    props.onSearch(queryString);
+    router.push({ ...router, query: { search: query } });
   };
 
   function checkData(event: React.ChangeEvent<HTMLInputElement>) {
-    setQueryString(event.target.value);
+    setQuery(event.target.value);
   }
 
   return (
@@ -24,7 +21,7 @@ function Search(props: Props) {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            value={queryString}
+            value={query}
             onChange={checkData}
             placeholder="Enter request..."
           ></input>

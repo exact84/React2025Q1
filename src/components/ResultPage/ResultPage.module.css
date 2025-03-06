@@ -10,6 +10,10 @@
   align-items: center;
 }
 
+.characters {
+  width: 100%;
+}
+
 li.character {
   margin: 0;
   padding: 3px;
@@ -69,12 +73,6 @@ ul.character {
 .button {
   max-width: 150px;
   align-self: center;
-}
-
-button.active {
-  color: var(--page-activ);
-  font-size: x-large;
-  font-weight: bold;
 }
 
 .details {

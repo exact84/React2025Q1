@@ -1,20 +1,33 @@
-/* eslint-disable react-refresh/only-export-components */
 import { GetServerSideProps } from 'next';
 import { getCharacterData } from './characterData';
-import Home from './Home';
 import { Character } from 'types/characterTypes';
+import { ErrorBoundary, Search } from '@components/index';
+import ResultPage from '@components/ResultPage/ResultPage';
+
+import getPageCount from 'utils/pages';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { props } = await getCharacterData(context);
+
   return { props };
 };
 
-export default function IndexPage({
+export default function Home({
   characters,
   count,
 }: {
   characters: Character[];
   count: number;
 }) {
-  return <Home characters={characters} count={count} />;
+  return (
+    <div className="list">
+      <Search />
+      <ErrorBoundary>
+        <ResultPage
+          characters={characters || []}
+          totalPages={getPageCount(count, 10)}
+        />
+      </ErrorBoundary>
+    </div>
+  );
 }
