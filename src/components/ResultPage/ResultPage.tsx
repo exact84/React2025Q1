@@ -1,21 +1,20 @@
-/* eslint-disable react-refresh/only-export-components */
 import { Character } from 'types/characterTypes';
 import styles from './ResultPage.module.css';
-import Loader from '../components/Loader/Loader';
+import Loader from '../Loader/Loader';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../context/ThemeContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store/indexStore';
-import { addItem, delItem, delAll } from '../store/slices/checkedItemsSlice';
+import { AppDispatch, RootState } from '../../store/indexStore';
+import { addItem, delItem, delAll } from '../../store/slices/checkedItemsSlice';
 import { useRouter } from 'next/router';
-import { extractIdFromUrl } from '../utils/extractIdFromUrl';
-import { getServerSideProps } from './characterData';
+import { extractIdFromUrl } from '../../utils/extractIdFromUrl';
+// import { getCharacterData } from './characterData';
 
 interface CharacterListProps {
   characters: Character[];
   currentPage: number;
   totalPages: number;
-  errorAPI: string;
+  // errorAPI: string;
   isLoading: boolean;
   onPageChange: (page: number) => void;
   searchQuery: string;
@@ -47,7 +46,7 @@ export default function ResultPage(props: CharacterListProps) {
 
   const {
     characters,
-    errorAPI,
+    // errorAPI,
     isLoading,
     currentPage,
     searchQuery,
@@ -71,7 +70,7 @@ export default function ResultPage(props: CharacterListProps) {
       router.push(`/?query=${searchQuery}&page=${currentPage}`);
       console.log('currentId: ', currentId, 'character.url id: ', id);
     } else {
-      router.push(
+      router.replace(
         `/details/${extractIdFromUrl(character.url)}?query=${searchQuery}&page=${currentPage}`
       );
     }
@@ -188,7 +187,7 @@ export default function ResultPage(props: CharacterListProps) {
                 </div>
               </>
             ) : (
-              <p>No characters found. {errorAPI}</p>
+              <p>No characters found.</p>
             )}
             <div className={styles.results}>
               <button className={styles.button} onClick={context.toggleTheme}>
@@ -204,5 +203,3 @@ export default function ResultPage(props: CharacterListProps) {
     </>
   );
 }
-
-export { getServerSideProps };

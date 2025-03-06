@@ -3,8 +3,8 @@ import { MemoryRouter } from 'react-router-dom';
 import ResultPage from './ResultPage';
 import { vi } from 'vitest';
 import { Provider } from 'react-redux';
-import { store } from '../store/indexStore';
-import { delAll } from '../store/slices/checkedItemsSlice';
+import { store } from '../../store/indexStore';
+import { delAll } from '../../store/slices/checkedItemsSlice';
 
 describe('ResultPage Component', () => {
   it('renders the specified number of cards', async () => {

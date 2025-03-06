@@ -1,12 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Header, Search, ErrorBoundary } from '../components';
 import { useRestoreSearch } from '../hooks/useRestoreSearch';
 import getPageCount from '../utils/pages';
-import { useCharacters } from '../services/swapi';
-import ResultPage from './ResultPage';
+import ResultPage from '../components/ResultPage/ResultPage';
+import { Character } from 'types/characterTypes';
+// import { GetServerSideProps } from 'next';
+// import { getCharacterData } from './characterData';
+import Details from './details/[id]';
 
-export default function Home() {
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const { props } = await getCharacterData(context);
+//   return { props };
+// };
+
+export default function Home({
+  characters = [],
+  count,
+  character,
+  // children,
+}: {
+  characters: Character[];
+  count: number;
+  character?: Character;
+  // children: ReactNode;
+}) {
   const router = useRouter();
   const { query = '', page = '1' } = router.query;
   const queryParam = Array.isArray(query) ? query[0] : query;
@@ -17,25 +35,24 @@ export default function Home() {
     if (typeof query === 'string') setQueryString(query);
   }, [query, setQueryString]);
 
-  const { data, error, isLoading } = useCharacters(
-    typeof query === 'string' ? query : '',
-    Number(page)
-  );
+  const [searchLoading, setSearchLoading] = useState(false);
+
+  useEffect(() => {
+    setSearchLoading(false);
+  }, [characters]);
 
   const handleSearch = (query: string) => {
-    router.push(`/?query=${encodeURIComponent(query)}&page=1`);
+    // setLoading(true);
+    router.replace(`/?query=${encodeURIComponent(query)}&page=1`, undefined, {
+      shallow: false,
+    });
   };
 
   function handleError(error: Error) {
     console.error('Error caught in Home:', error);
   }
 
-  const getErrorMessage = (error: unknown) => {
-    if (typeof error === 'string') return error;
-    if (error && typeof error === 'object' && 'status' in error)
-      return `Error ${error.status}`;
-    return 'An unknown error occurred';
-  };
+  const isDetailsPage = router.pathname.startsWith('/details');
 
   return (
     <ErrorBoundary
@@ -47,11 +64,10 @@ export default function Home() {
         <Header />
         <Search onSearch={handleSearch} searchQuery={query as string} />
         <ResultPage
-          characters={data?.results || []}
-          errorAPI={error ? getErrorMessage(error) : ''}
-          isLoading={isLoading}
+          characters={characters || []}
+          isLoading={searchLoading}
           currentPage={Number(page)}
-          totalPages={getPageCount(data?.count, 10)}
+          totalPages={getPageCount(count, 10)}
           onPageChange={(newPage) => {
             router.push(
               `/?query=${encodeURIComponent(queryParam)}&page=${newPage}`
@@ -59,6 +75,8 @@ export default function Home() {
           }}
           searchQuery={queryString}
         />
+        {isDetailsPage && character && <Details character={character} />}
+        {/* {children} */}
       </div>
     </ErrorBoundary>
   );

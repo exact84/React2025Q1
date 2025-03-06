@@ -1,10 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useRouter } from 'next/router';
 import { Character } from 'types/characterTypes';
-import styles from '../ResultPage.module.css';
-import { getServerSideProps } from '../characterData';
+import styles from '../../components/ResultPage/ResultPage.module.css';
+import { getCharacterData } from '../characterData';
+import { GetServerSideProps } from 'next';
 
-const Page = ({ character }: { character: Character }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { props } = await getCharacterData(context);
+  return { props };
+};
+
+export default function Page({ character }: { character: Character }) {
   const router = useRouter();
   const searchQuery =
     typeof router.query.query === 'string' ? router.query.query : '';
@@ -15,9 +21,12 @@ const Page = ({ character }: { character: Character }) => {
   }
 
   const handleCloseClick = () => {
-    router.replace(`/?query=${searchQuery}&page=${currentPage}`);
+    router.replace(`/?query=${searchQuery}&page=${currentPage}`, undefined, {
+      shallow: true,
+    });
   };
 
+  console.log('отображаем в detais:', character);
   return (
     <div className={styles.details}>
       <ul className={styles.character}>
@@ -34,7 +43,4 @@ const Page = ({ character }: { character: Character }) => {
       </button>
     </div>
   );
-};
-
-export { getServerSideProps };
-export default Page;
+}
