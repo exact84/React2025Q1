@@ -4,13 +4,22 @@ import { Character } from 'types/characterTypes';
 import styles from '../../components/ResultPage/ResultPage.module.css';
 import { getCharacterData } from '../characterData';
 import { GetServerSideProps } from 'next';
+import Home from 'pages/Home';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { props } = await getCharacterData(context);
   return { props };
 };
 
-export default function Page({ character }: { character: Character }) {
+export default function Page({
+  character,
+  characters,
+  count,
+}: {
+  character: Character;
+  characters: Character[];
+  count: number;
+}) {
   const router = useRouter();
   const searchQuery =
     typeof router.query.query === 'string' ? router.query.query : '';
@@ -28,19 +37,21 @@ export default function Page({ character }: { character: Character }) {
 
   console.log('отображаем в detais:', character);
   return (
-    <div className={styles.details}>
-      <ul className={styles.character}>
-        {Object.entries(character)
-          .filter(([, value]) => typeof value !== 'object')
-          .map(([key, value]) => (
-            <li key={key} className={styles['character-info']}>
-              <strong>{key}:</strong> {String(value)}
-            </li>
-          ))}
-      </ul>
-      <button onClick={handleCloseClick} className="close">
-        ⇦ Close
-      </button>
-    </div>
+    <Home characters={characters} count={count}>
+      <div className={styles.details}>
+        <ul className={styles.character}>
+          {Object.entries(character)
+            .filter(([, value]) => typeof value !== 'object')
+            .map(([key, value]) => (
+              <li key={key} className={styles['character-info']}>
+                <strong>{key}:</strong> {String(value)}
+              </li>
+            ))}
+        </ul>
+        <button onClick={handleCloseClick} className="close">
+          ⇦ Close
+        </button>
+      </div>
+    </Home>
   );
 }

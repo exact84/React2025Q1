@@ -51,15 +51,14 @@ body {
 .main {
   display: flex;
   align-items: center;
-  /* flex: 0 1 auto; */
   justify-self: center;
   margin: 10px 10px;
 }
 
-/* .list {
+.list {
   display: flex;
   flex-direction: column;
-} */
+}
 
 .rowBox {
   display: flex;
