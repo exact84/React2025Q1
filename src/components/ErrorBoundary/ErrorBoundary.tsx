@@ -1,4 +1,3 @@
-// components/ErrorBoundary.js
 import React, { Component } from 'react';
 
 interface ErrorBoundaryProps {
@@ -41,6 +40,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           <div style={{ padding: '20px', color: 'red' }}>
             <h2>Something went wrong!</h2>
             <p>{error?.toString()}</p>
+            <button
+              onClick={() =>
+                this.setState({ hasError: false, error: null, errorInfo: null })
+              }
+            >
+              Return
+            </button>
           </div>
         )
       );
