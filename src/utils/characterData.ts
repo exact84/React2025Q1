@@ -12,19 +12,21 @@ export async function getCharacterData(context: GetServerSidePropsContext) {
     );
 
     const data = await response.json();
+
+    if (data.results.length === 0) {
+      {
+        return { notFound: true };
+      }
+    }
+
     return {
       props: {
-        characters: data.results,
+        characters: data.results ?? null,
         count: data.count,
       },
     };
   } catch (error) {
     console.error(error);
-    return {
-      props: {
-        characters: null,
-        count: null,
-      },
-    };
+    return { notFound: true };
   }
 }

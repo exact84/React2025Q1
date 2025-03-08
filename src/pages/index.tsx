@@ -8,9 +8,11 @@ import ReduxProvider from '@components/ReduxProvider/ReduxProvider';
 import getPageCount from 'utils/pages';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { props } = await getCharacterData(context);
-
-  return { props };
+  const result = await getCharacterData(context);
+  if ('notFound' in result) {
+    return { notFound: true };
+  }
+  return { props: result.props };
 };
 
 export default function Home({
