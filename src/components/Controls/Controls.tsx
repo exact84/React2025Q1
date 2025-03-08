@@ -1,8 +1,22 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const Controls = ({ totalPages }: { totalPages: number }) => {
   const router = useRouter();
   const currentPage = parseInt(router.query.page as string) || 1;
+
+  useEffect(() => {
+    if (!router.query.page) {
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, page: 1 },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [router]);
 
   const handleChangePage = (page: number) => {
     router.push({
