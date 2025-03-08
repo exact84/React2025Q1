@@ -4,22 +4,31 @@ import { useEffect, useState } from 'react';
 import { Character } from 'types/characterTypes';
 import styles from '../ResultPage/ResultPage.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, delAll, delItem } from 'store/slices/checkedItemsSlice';
+import {
+  addItem,
+  delAll,
+  delItem,
+  selectCharacter,
+} from 'store/slices/checkedItemsSlice';
 import { RootState } from 'store/indexStore';
 import CharacterCard from '@components/CharacterCard/CharacterCard';
-import { extractIdFromUrl } from 'utils/extractIdFromUrl';
 import Loader from '@components/Loader/Loader';
+import { useRouter } from 'next/router';
+import { extractIdFromUrl } from 'utils/extractIdFromUrl';
 
 interface CharactersProps {
   characters: Character[];
-  onSelectCharacter: (character: Character | null) => void;
 }
 
-const Characters = ({ characters, onSelectCharacter }: CharactersProps) => {
+const Characters = ({ characters }: CharactersProps) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const dispatch = useDispatch();
   const items = useSelector(({ items }: RootState) => items.items);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const selectedCharacter = useSelector(
+    ({ items }: RootState) => items.selectedCharacter
+  );
 
   useEffect(() => {
     // работает только первый раз ((
@@ -33,25 +42,24 @@ const Characters = ({ characters, onSelectCharacter }: CharactersProps) => {
     e: React.MouseEvent<HTMLElement> | ChangeEvent<HTMLInputElement>,
     character: Character
   ) => {
-    const characterId = extractIdFromUrl(character.url);
     const target = e.target as HTMLElement;
+    const targetCharacterId = extractIdFromUrl(character.url);
     if (target.tagName === 'INPUT') {
       e.stopPropagation();
       const checkbox = target as HTMLInputElement;
       if (checkbox.checked) dispatch(addItem(character));
       else dispatch(delItem(character));
     } else {
-      const url = new URL(window.location.href);
-      const currentId = extractIdFromUrl(url.toString());
-      if (currentId !== characterId) {
-        onSelectCharacter(character);
-        url.pathname = `/details/${characterId}`;
-        window.history.pushState({}, '', url.toString());
-      } else {
-        onSelectCharacter(null);
-        url.pathname = '/';
-        window.history.pushState({}, '', url);
-      }
+      const selectedCharacterId = extractIdFromUrl(selectedCharacter?.url);
+      const isSameCharacter = selectedCharacterId === targetCharacterId;
+      dispatch(selectCharacter(isSameCharacter ? null : character));
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          details: isSameCharacter ? null : targetCharacterId,
+        },
+      });
     }
   };
 

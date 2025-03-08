@@ -7,6 +7,11 @@ import { ThemeContext } from '../../context/ThemeContext';
 import Characters from '@components/Characters/Characters';
 import Controls from '@components/Controls/Controls';
 import CharacterDetails from '@components/CharacterDetails/CharacterDetails';
+import { RootState } from 'store/indexStore';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCharacter } from 'store/slices/checkedItemsSlice';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 interface CharacterListProps {
   characters: Character[];
@@ -14,17 +19,37 @@ interface CharacterListProps {
 }
 
 export default function ResultPage(props: CharacterListProps) {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
-    null
+  const selectedCharacter = useSelector(
+    ({ items }: RootState) => items.selectedCharacter
   );
+
+  const [detailsId, setDetailsId] = useState<null | string>();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setDetailsId(searchParams.get('details'));
+  }, []);
+
+  useEffect(() => {
+    if (detailsId) {
+      console.log(detailsId);
+      dispatch(selectCharacter(props.characters[Number(detailsId)]));
+    }
+  }, [detailsId]);
+
   const context = useContext(ThemeContext);
   const [isError, setIsError] = useState(false);
 
   const handleClose = () => {
-    setSelectedCharacter(null);
-    const url = new URL(window.location.href);
-    url.pathname = '/';
-    window.history.pushState({}, '', url);
+    dispatch(selectCharacter(null));
+    const { page, query } = router.query;
+    router.push({
+      pathname: router.pathname,
+      query: { page, query },
+    });
   };
 
   const handleClickError = () => {
@@ -37,19 +62,12 @@ export default function ResultPage(props: CharacterListProps) {
     if (isError) throw new Error('This is a test error! ');
   }, [isError]);
 
-  // if (!characters) {
-  //   return <div>Error 404.</div>;
-  // }
-
   return (
     <section className={styles.results}>
       <div className={styles.list}>
         {characters.length > 0 ? (
           <>
-            <Characters
-              characters={characters}
-              onSelectCharacter={setSelectedCharacter}
-            />
+            <Characters characters={characters} />
             <hr></hr>
             <Controls totalPages={props.totalPages} />
           </>
