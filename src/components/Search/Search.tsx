@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import styles from './Search.module.css';
 import { useRouter } from 'next/router';
 
@@ -6,9 +7,18 @@ function Search() {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
+  useEffect(() => {
+    if (router.query.search) {
+      setQuery(router.query.search as string);
+    }
+  }, [router.query.search]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push({ ...router, query: { search: query } });
+    router.push({
+      pathname: router.pathname,
+      query: { search: query },
+    });
   };
 
   function checkData(event: React.ChangeEvent<HTMLInputElement>) {
