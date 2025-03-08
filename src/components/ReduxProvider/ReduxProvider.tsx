@@ -1,4 +1,3 @@
-// components/ReduxProvider.js
 'use client';
 
 import { ReactNode } from 'react';

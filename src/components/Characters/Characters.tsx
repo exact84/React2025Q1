@@ -4,36 +4,25 @@ import { useEffect, useState } from 'react';
 import { Character } from 'types/characterTypes';
 import styles from '../ResultPage/ResultPage.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  addItem,
-  delAll,
-  delItem,
-  selectCharacter,
-} from 'store/slices/checkedItemsSlice';
+import { addItem, delAll, delItem } from 'store/slices/checkedItemsSlice';
 import { RootState } from 'store/indexStore';
 import CharacterCard from '@components/CharacterCard/CharacterCard';
 import { extractIdFromUrl } from 'utils/extractIdFromUrl';
 import Loader from '@components/Loader/Loader';
 
-const Characters = ({ characters }: { characters: Character[] }) => {
+interface CharactersProps {
+  characters: Character[];
+  onSelectCharacter: (character: Character | null) => void;
+}
+
+const Characters = ({ characters, onSelectCharacter }: CharactersProps) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const dispatch = useDispatch();
   const items = useSelector(({ items }: RootState) => items.items);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(selectCharacter(null));
-  }, [dispatch, characters]);
-
-  // заглушка-обманка
-  useEffect(() => {
-    setIsLoading(true);
-    const timeout = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(timeout);
-  }, [characters]);
-
-  useEffect(() => {
-    // не работает ((
+    // работает только первый раз ((
     setIsLoading(characters.length === 0);
   }, [characters]);
 
@@ -55,12 +44,11 @@ const Characters = ({ characters }: { characters: Character[] }) => {
       const url = new URL(window.location.href);
       const currentId = extractIdFromUrl(url.toString());
       if (currentId !== characterId) {
-        dispatch(selectCharacter(character));
+        onSelectCharacter(character);
         url.pathname = `/details/${characterId}`;
         window.history.pushState({}, '', url.toString());
-        // чтобы отображался адрес
       } else {
-        dispatch(selectCharacter(null));
+        onSelectCharacter(null);
         url.pathname = '/';
         window.history.pushState({}, '', url);
       }

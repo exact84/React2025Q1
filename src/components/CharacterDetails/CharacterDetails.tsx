@@ -1,59 +1,57 @@
 'use client';
 
 import Loader from '@components/Loader/Loader';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/indexStore';
-import { useGetCharacterQuery } from 'store/slices/apiSlice';
-import { extractIdFromUrl } from 'utils/extractIdFromUrl';
 import styles from '../../components/ResultPage/ResultPage.module.css';
-import { skipToken } from '@reduxjs/toolkit/query';
-import { selectCharacter } from 'store/slices/checkedItemsSlice';
+import { Character } from 'types/characterTypes';
 
-const CharacterDetails = () => {
-  const dispatch = useDispatch();
-  const selectedCharacter = useSelector(
-    (state: RootState) => state.items.selectedCharacter
-  );
+interface CharacterDetailsProps {
+  character: Character | null;
+  isLoading: boolean;
+  error: string | null;
+  handleCloseClick: () => void;
+}
 
-  const characterId = selectedCharacter
-    ? extractIdFromUrl(selectedCharacter.url)
-    : null;
+const CharacterDetails = ({
+  character,
+  isLoading,
+  error,
+  handleCloseClick,
+}: CharacterDetailsProps) => {
+  if (isLoading) {
+    return <Loader />;
+  }
 
-  const { data, isLoading, isFetching } = useGetCharacterQuery(
-    characterId ?? skipToken
-  );
+  if (error) {
+    return <h2>{error}</h2>;
+  }
 
-  if (!characterId) return null;
+  if (!character) {
+    return;
+  }
 
-  const handleCloseClick = () => {
-    const url = new URL(window.location.href);
-    dispatch(selectCharacter(null));
-    url.pathname = '/';
-    window.history.pushState({}, '', url);
-  };
-
+  console.log('Render Details!');
   return (
     <div className={styles.details}>
-      {isLoading || isFetching ? (
+      {/* {isLoading || isFetching ? (
         <Loader />
       ) : (
-        data && (
-          <>
-            <ul className={styles.character}>
-              {Object.entries(data ?? {})
-                .filter(([, value]) => typeof value !== 'object')
-                .map(([key, value]) => (
-                  <li key={key} className={styles['character-info']}>
-                    <strong>{key}:</strong> {String(value)}
-                  </li>
-                ))}
-            </ul>
-            <button onClick={handleCloseClick} className="close">
-              ⇦ Close
-            </button>
-          </>
-        )
-      )}
+        character && (
+          <> */}
+      <ul className={styles.character}>
+        {Object.entries(character ?? {})
+          .filter(([, value]) => typeof value !== 'object')
+          .map(([key, value]) => (
+            <li key={key} className={styles['character-info']}>
+              <strong>{key}:</strong> {String(value)}
+            </li>
+          ))}
+      </ul>
+      <button onClick={handleCloseClick} className="close">
+        ⇦ Close
+      </button>
+      {/* </>
+         )
+       )} */}
     </div>
   );
 };
