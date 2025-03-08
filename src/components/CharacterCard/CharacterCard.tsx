@@ -1,31 +1,29 @@
-import React, { ChangeEvent } from 'react';
+// import React, { ChangeEvent } from 'react';
 import { Character } from 'types/characterTypes';
 import styles from '../ResultPage/ResultPage.module.css';
+import { ChangeEvent } from 'react';
 
 interface Props {
   character: Character;
-  handleChooseItem: (character: Character) => void;
+  handleChooseItem: (
+    e: React.MouseEvent<HTMLElement> | ChangeEvent<HTMLInputElement>,
+    character: Character
+  ) => void;
   isChecked: boolean;
-  select: (e: ChangeEvent<HTMLInputElement>, character: Character) => void;
 }
 
-const CharacterCard = ({
-  character,
-  handleChooseItem,
-  isChecked,
-  select,
-}: Props) => {
+const CharacterCard = ({ character, handleChooseItem, isChecked }: Props) => {
   return (
     <li
       key={character.url}
       className={styles.character}
-      onClick={() => handleChooseItem(character)}
+      onClick={(e) => handleChooseItem(e, character)}
     >
       <input
         type="checkbox"
         className="default"
         checked={isChecked}
-        onChange={(e) => select(e, character)}
+        readOnly
       ></input>
       <h3 className={styles.character_name}>{character.name}</h3>
       <br />

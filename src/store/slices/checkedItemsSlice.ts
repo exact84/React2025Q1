@@ -26,7 +26,7 @@ const checkedItemsSlice = createSlice({
     delAll: (state) => {
       state.items = [];
     },
-    selectCharacter: (state, action: PayloadAction<Character>) => {
+    selectCharacter: (state, action: PayloadAction<Character | null>) => {
       state.selectedCharacter = action.payload;
     },
   },
