@@ -17,7 +17,10 @@ function Search() {
     e.preventDefault();
     router.push({
       pathname: router.pathname,
-      query: { search: query },
+      query: {
+        ...router.query,
+        search: query,
+      },
     });
   };
 
@@ -26,19 +29,17 @@ function Search() {
   }
 
   return (
-    <>
-      <section className={styles.container}>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={query}
-            onChange={checkData}
-            placeholder="Enter request..."
-          ></input>
-          <button type="submit">Search</button>
-        </form>
-      </section>
-    </>
+    <section className={styles.container}>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={query}
+          onChange={checkData}
+          placeholder="Enter request..."
+        ></input>
+        <button type="submit">Search</button>
+      </form>
+    </section>
   );
 }
 

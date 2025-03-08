@@ -4,19 +4,20 @@ import { useEffect } from 'react';
 const Controls = ({ totalPages }: { totalPages: number }) => {
   const router = useRouter();
   const currentPage = parseInt(router.query.page as string) || 1;
+  const searchQuery = parseInt(router.query.search as string) || '';
 
   useEffect(() => {
     if (!router.query.page) {
       router.replace(
         {
           pathname: router.pathname,
-          query: { ...router.query, page: 1 },
+          query: { ...router.query, page: 1, search: searchQuery },
         },
         undefined,
         { shallow: true }
       );
     }
-  }, [router]);
+  }, [router, searchQuery]);
 
   const handleChangePage = (page: number) => {
     router.push({

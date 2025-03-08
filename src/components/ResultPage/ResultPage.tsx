@@ -38,17 +38,18 @@ export default function ResultPage(props: CharacterListProps) {
       console.log(detailsId);
       dispatch(selectCharacter(props.characters[Number(detailsId)]));
     }
-  }, [detailsId]);
+  }, [detailsId, dispatch, props.characters]);
 
   const context = useContext(ThemeContext);
   const [isError, setIsError] = useState(false);
 
   const handleClose = () => {
     dispatch(selectCharacter(null));
-    const { page, query } = router.query;
+    const { page, search } = router.query;
+    const details = '';
     router.push({
       pathname: router.pathname,
-      query: { page, query },
+      query: { page, search, details },
     });
   };
 
