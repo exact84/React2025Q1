@@ -1,3 +1,3 @@
 export default function Error() {
-  return <h1>404. Next Error. Character Not Found</h1>;
+  return <h1>404. Next Error. Page Not Found.</h1>;
 }

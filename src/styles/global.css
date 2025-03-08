@@ -42,6 +42,7 @@ body {
   display: flex;
   align-content: center;
   min-width: 320px;
+  width: 100vw;
   min-height: 98vh;
   transition:
     background-color 0.3s,
@@ -50,6 +51,7 @@ body {
 
 .main {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-self: center;
   margin: 10px 10px;
@@ -58,6 +60,7 @@ body {
 .list {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .rowBox {
@@ -108,4 +111,10 @@ button:hover {
 
 button:active {
   transform: scale(1);
+}
+
+button.active {
+  color: var(--page-activ);
+  font-size: x-large;
+  font-weight: bold;
 }
