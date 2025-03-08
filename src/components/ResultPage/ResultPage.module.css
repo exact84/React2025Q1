@@ -56,8 +56,8 @@ ul.character {
   opacity: 0;
   overflow: hidden;
   transition:
-    opacity 0.3s ease,
-    max-height 0.3s ease;
+    opacity 0.5s ease,
+    max-height 0.5s ease;
   justify-content: space-around;
   align-items: center;
 }
@@ -66,8 +66,8 @@ ul.character {
   max-height: 500px;
   opacity: 1;
   transition:
-    opacity 0.3s ease,
-    max-height 0.3s ease;
+    opacity 0.5s ease,
+    max-height 0.5s ease;
 }
 
 .button {

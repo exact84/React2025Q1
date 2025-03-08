@@ -13,7 +13,7 @@ export async function getCharacterData(context: GetServerSidePropsContext) {
 
     const data = await response.json();
 
-    if (data.results.length === 0) {
+    if (!data.results || data.results.length === 0) {
       {
         return { notFound: true };
       }
