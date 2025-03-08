@@ -1,4 +1,3 @@
-// import React, { ChangeEvent } from 'react';
 import { Character } from 'types/characterTypes';
 import styles from '../ResultPage/ResultPage.module.css';
 import { ChangeEvent } from 'react';

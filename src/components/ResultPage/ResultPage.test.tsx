@@ -28,7 +28,7 @@ describe('ResultPage Component', () => {
     );
   };
 
-  it('рендерит список персонажей', async () => {
+  it('renders the character list', async () => {
     renderWithProviders(
       <ResultPage characters={mockCharacters} totalPages={1} />
     );
@@ -38,7 +38,7 @@ describe('ResultPage Component', () => {
     });
   });
 
-  it('показывает сообщение, если персонажи не найдены', async () => {
+  it('displays a message if no characters are found', async () => {
     renderWithProviders(<ResultPage characters={[]} totalPages={0} />);
 
     await waitFor(() => {
@@ -46,7 +46,7 @@ describe('ResultPage Component', () => {
     });
   });
 
-  it('переключает тему при клике на кнопку "Change Theme"', async () => {
+  it('toggles the theme when clicking the "Change Theme" button', async () => {
     const toggleThemeMock = vi.fn();
     render(
       <Provider store={store}>
@@ -64,7 +64,7 @@ describe('ResultPage Component', () => {
     expect(toggleThemeMock).toHaveBeenCalled();
   });
 
-  it('вызывает ошибку при клике на "Error Button"', async () => {
+  it('throws an error when clicking the "Error Button"', async () => {
     renderWithProviders(
       <ResultPage characters={mockCharacters} totalPages={1} />
     );

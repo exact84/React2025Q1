@@ -1,5 +1,5 @@
 import Header from '@components/Header/Header';
-import { ThemeProvider } from 'context/ThemeProvider';
+import { ThemeProvider } from '@/context/ThemeProvider';
 import Head from 'next/head';
 import { ReactNode, StrictMode } from 'react';
 

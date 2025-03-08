@@ -1,7 +1,7 @@
 'use client';
 import React, { ChangeEvent, useRef } from 'react';
 import { useEffect, useState } from 'react';
-import { Character } from 'types/characterTypes';
+import { Character } from '@/types/characterTypes';
 import styles from '../ResultPage/ResultPage.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,12 +9,12 @@ import {
   delAll,
   delItem,
   selectCharacter,
-} from 'store/slices/checkedItemsSlice';
-import { RootState } from 'store/indexStore';
+} from '@/store/slices/checkedItemsSlice';
+import { RootState } from '@/store/indexStore';
 import CharacterCard from '@components/CharacterCard/CharacterCard';
 import Loader from '@components/Loader/Loader';
 import { useRouter } from 'next/router';
-import { extractIdFromUrl } from 'utils/extractIdFromUrl';
+import { extractIdFromUrl } from '@/utils/extractIdFromUrl';
 
 interface CharactersProps {
   characters: Character[];
@@ -31,7 +31,6 @@ const Characters = ({ characters }: CharactersProps) => {
   );
 
   useEffect(() => {
-    // работает только первый раз ((
     setIsLoading(characters.length === 0);
   }, [characters]);
 
@@ -68,6 +67,7 @@ const Characters = ({ characters }: CharactersProps) => {
   };
 
   const handleDownload = () => {
+    if (items.length === 0) return;
     const headersCharacter: Array<keyof Character> = Object.keys(
       items[0]
     ) as Array<keyof Character>;

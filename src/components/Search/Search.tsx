@@ -8,10 +8,11 @@ function Search() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!router.isReady) return;
     if (router.query.search) {
       setQuery(router.query.search as string);
     }
-  }, [router.query.search]);
+  }, [router.isReady, router.query?.search]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -9,7 +9,7 @@ import Controls from '@components/Controls/Controls';
 import CharacterDetails from '@components/CharacterDetails/CharacterDetails';
 import { RootState } from 'store/indexStore';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCharacter } from 'store/slices/checkedItemsSlice';
+import { selectCharacter } from '@/store/slices/checkedItemsSlice';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
@@ -30,12 +30,11 @@ export default function ResultPage(props: CharacterListProps) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setDetailsId(searchParams.get('details'));
+    if (searchParams) setDetailsId(searchParams.get('details'));
   }, []);
 
   useEffect(() => {
     if (detailsId) {
-      console.log(detailsId);
       dispatch(selectCharacter(props.characters[Number(detailsId)]));
     }
   }, [detailsId, dispatch, props.characters]);

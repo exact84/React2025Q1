@@ -29,14 +29,8 @@ const CharacterDetails = ({
     return;
   }
 
-  console.log('Render Details!');
   return (
     <div className={styles.details}>
-      {/* {isLoading || isFetching ? (
-        <Loader />
-      ) : (
-        character && (
-          <> */}
       <ul className={styles.character}>
         {Object.entries(character ?? {})
           .filter(([, value]) => typeof value !== 'object')
@@ -49,9 +43,6 @@ const CharacterDetails = ({
       <button onClick={handleCloseClick} className="close">
         ⇦ Close
       </button>
-      {/* </>
-         )
-       )} */}
     </div>
   );
 };
