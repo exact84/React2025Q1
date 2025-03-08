@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { getCharacterData } from './characterData';
+import { getCharacterData } from '../utils/characterData';
 import { Character } from 'types/characterTypes';
 import { ErrorBoundary, Search } from '@components/index';
 import ResultPage from '@components/ResultPage/ResultPage';
