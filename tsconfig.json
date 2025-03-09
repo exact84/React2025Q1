@@ -4,14 +4,24 @@
     // "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["esnext", "DOM", "DOM.Iterable"],
+    "lib": [
+      "esnext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": "src/",
     "paths": {
-      "@/*": ["./*"],
-      "@components/*": ["components/*"],
-      "@pages/": ["pages/"]
+      "@/*": [
+        "./*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@pages/": [
+        "pages/"
+      ]
     },
     /* Bundler mode */
     "moduleResolution": "node", //"bundler",
@@ -26,17 +36,33 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["vitest/globals", "jest", "@testing-library/jest-dom", "node"],
+    "types": [
+      "vitest/globals",
+      "jest",
+      "@testing-library/jest-dom",
+      "node"
+    ],
     "allowJs": true,
     "incremental": true,
     "esModuleInterop": true
     // "typeRoots": ["./node_modules/@types", "./types"]
+    ,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    ".next/types/**/*.ts"
+  ],
   // "references": [
   //   {
   // "path": "./tsconfig.node.json"
   //   }
   // ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
