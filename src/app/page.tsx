@@ -34,9 +34,9 @@ async function getCharacterData(page: string, search: string) {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string };
+  searchParams: Promise<{ page?: string; search?: string }>;
 }) {
-  const { page = '1', search = '' } = searchParams;
+  const { page = '1', search = '' } = await searchParams;
   const data = await getCharacterData(page, search);
 
   if (!data) {
