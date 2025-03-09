@@ -6,7 +6,6 @@ import checkedItemsReducer, {
 } from './checkedItemsSlice';
 import { Character } from '../../types/characterTypes';
 import { RootState } from '../indexStore';
-import { apiSlice } from './apiSlice';
 
 describe('checkedItemsSlice', () => {
   let store: Store<RootState>;
@@ -16,21 +15,24 @@ describe('checkedItemsSlice', () => {
     height: '172',
     gender: 'male',
     hair_color: 'blond',
+    eye_color: '',
+    skin_color: '',
   };
 
   beforeEach(() => {
     store = configureStore({
       reducer: {
         items: checkedItemsReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
       },
-      middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(apiSlice.middleware),
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     });
   });
 
   test('should return the initial state', () => {
-    expect(store.getState().items).toEqual({ items: [] });
+    expect(store.getState().items).toEqual({
+      selectedCharacter: null,
+      items: [],
+    });
   });
 
   test('should handle addItem', () => {

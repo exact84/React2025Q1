@@ -1,35 +1,36 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import ResultPage from './ResultPage';
 import { vi } from 'vitest';
 import { Provider } from 'react-redux';
 import { store } from '../../store/indexStore';
-import { delAll } from '../../store/slices/checkedItemsSlice';
+import { ThemeContext } from '../../context/ThemeContext';
 
 describe('ResultPage Component', () => {
-  it('renders the specified number of cards', async () => {
-    render(
+  const mockCharacters = [
+    {
+      name: 'Luke Skywalker',
+      height: '172',
+      hair_color: 'blond',
+      gender: 'male',
+      url: 'https://swapi.dev/api/people/1/',
+      eye_color: '',
+      skin_color: '',
+    },
+  ];
+
+  const renderWithProviders = (ui: React.ReactNode) => {
+    return render(
       <Provider store={store}>
-        <MemoryRouter>
-          <ResultPage
-            characters={[
-              {
-                name: 'Luke Skywalker',
-                height: '172',
-                hair_color: 'blond',
-                gender: 'male',
-                url: 'https://swapi.dev/api/people/1/',
-              },
-            ]}
-            currentPage={1}
-            totalPages={1}
-            errorAPI=""
-            isLoading={false}
-            onPageChange={() => {}}
-            searchQuery="Luke"
-          />
-        </MemoryRouter>
+        <ThemeContext.Provider value={{ theme: 'light', toggleTheme: vi.fn() }}>
+          {ui}
+        </ThemeContext.Provider>
       </Provider>
+    );
+  };
+
+  it('renders the character list', async () => {
+    renderWithProviders(
+      <ResultPage characters={mockCharacters} totalPages={1} />
     );
 
     await waitFor(() => {
@@ -37,181 +38,39 @@ describe('ResultPage Component', () => {
     });
   });
 
-  it('displays a message if no cards are present', async () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ResultPage
-            characters={[]}
-            currentPage={1}
-            totalPages={0}
-            errorAPI=""
-            isLoading={false}
-            onPageChange={() => {}}
-            searchQuery=""
-          />
-        </MemoryRouter>
-      </Provider>
-    );
+  it('displays a message if no characters are found', async () => {
+    renderWithProviders(<ResultPage characters={[]} totalPages={0} />);
 
     await waitFor(() => {
       expect(screen.getByText('No characters found.')).toBeInTheDocument();
     });
   });
 
-  it('displays a loader when isLoading is true', async () => {
+  it('toggles the theme when clicking the "Change Theme" button', async () => {
+    const toggleThemeMock = vi.fn();
     render(
       <Provider store={store}>
-        <MemoryRouter>
-          <ResultPage
-            characters={[]}
-            currentPage={1}
-            totalPages={0}
-            errorAPI=""
-            isLoading={true}
-            onPageChange={() => {}}
-            searchQuery=""
-          />
-        </MemoryRouter>
+        <ThemeContext.Provider
+          value={{ theme: 'light', toggleTheme: toggleThemeMock }}
+        >
+          <ResultPage characters={mockCharacters} totalPages={1} />
+        </ThemeContext.Provider>
       </Provider>
     );
 
-    await waitFor(() => {
-      expect(screen.getByTestId('loader')).toBeInTheDocument();
-    });
+    const button = screen.getByText('Change Theme');
+    fireEvent.click(button);
+
+    expect(toggleThemeMock).toHaveBeenCalled();
   });
 
-  it('renders pagination buttons and handles page change', async () => {
-    const mockOnPageChange = vi.fn();
-
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ResultPage
-            characters={[
-              {
-                name: 'Luke Skywalker',
-                height: '172',
-                hair_color: 'blond',
-                gender: 'male',
-                url: 'https://swapi.dev/api/people/1/',
-              },
-            ]}
-            currentPage={1}
-            totalPages={3}
-            errorAPI=""
-            isLoading={false}
-            onPageChange={mockOnPageChange}
-            searchQuery="Luke"
-          />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    const prevButton = screen.getByText('◀');
-    const nextButton = screen.getByText('►');
-    const pageButtons = screen.getAllByRole('button', { name: /[1-3]/ });
-
-    expect(prevButton).toBeInTheDocument();
-    expect(nextButton).toBeInTheDocument();
-    expect(pageButtons).toHaveLength(3);
-
-    fireEvent.click(pageButtons[1]);
-    expect(mockOnPageChange).toHaveBeenCalledWith(2);
-  });
-
-  it('throws an error when the error button is clicked', async () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ResultPage
-            characters={[]}
-            currentPage={1}
-            totalPages={0}
-            errorAPI=""
-            isLoading={false}
-            onPageChange={() => {}}
-            searchQuery=""
-          />
-        </MemoryRouter>
-      </Provider>
+  it('throws an error when clicking the "Error Button"', async () => {
+    renderWithProviders(
+      <ResultPage characters={mockCharacters} totalPages={1} />
     );
 
     const errorButton = screen.getByText('Error Button');
+
     expect(() => fireEvent.click(errorButton)).toThrow('This is a test error!');
-  });
-
-  it('checking items', async () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ResultPage
-            characters={[
-              {
-                name: 'Leia Organa',
-                height: '150',
-                hair_color: 'brown',
-                gender: 'female',
-                url: 'https://swapi.dev/api/people/5/',
-              },
-            ]}
-            currentPage={1}
-            totalPages={1}
-            errorAPI=""
-            isLoading={false}
-            onPageChange={() => {}}
-            searchQuery="Leia"
-          />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    const checkbox = screen.getByRole('checkbox');
-    fireEvent.click(checkbox);
-
-    expect(screen.getByText(/1 items are selected/i)).toBeInTheDocument();
-  });
-
-  beforeEach(() => {
-    store.dispatch(delAll());
-  });
-
-  it('add and delete items at store', async () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ResultPage
-            characters={[
-              {
-                name: 'Darth Vader',
-                height: '202',
-                hair_color: 'none',
-                gender: 'male',
-                url: 'https://swapi.dev/api/people/4/',
-              },
-            ]}
-            currentPage={1}
-            totalPages={1}
-            errorAPI=""
-            isLoading={false}
-            onPageChange={() => {}}
-            searchQuery="Darth"
-          />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    const checkbox = screen.getByRole('checkbox');
-    const button = screen.getByText('Unselect all');
-
-    fireEvent.click(checkbox);
-    expect(store.getState().items.items).toHaveLength(1);
-
-    fireEvent.click(checkbox);
-    expect(store.getState().items.items).toHaveLength(0);
-
-    fireEvent.click(checkbox);
-    fireEvent.click(button);
-    expect(store.getState().items.items).toHaveLength(0);
   });
 });

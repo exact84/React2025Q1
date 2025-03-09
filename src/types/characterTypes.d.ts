@@ -5,4 +5,6 @@ export interface Character {
   gender: string;
   hair_color: string;
   url: string;
+  eye_color: string;
+  skin_color: string;
 }

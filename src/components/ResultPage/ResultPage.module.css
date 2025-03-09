@@ -6,8 +6,11 @@
 .list {
   display: flex;
   flex-direction: column;
-  /* justify-content: flex-end; */
-  /* align-items: flex-end; */
+  width: 100%;
+  align-items: center;
+}
+
+.characters {
   width: 100%;
 }
 
@@ -15,16 +18,10 @@ li.character {
   margin: 0;
   padding: 3px;
   border: var(--border-color) solid 1px;
+  text-align: center;
 }
 
-/* li.character-info { */
-/* margin: 0; */
-/* padding: 3px; */
-/* border: green solid 1px; */
-/* } */
-
-input[type='checkbox'] {
-  /* padding: 0 5px; */
+input[type='checkbox'].default {
   margin: 0 10px;
 }
 
@@ -33,6 +30,8 @@ ul.character {
   padding: 0;
   border: var(--border-color) solid 1px;
   list-style-type: none;
+  width: 100%;
+  text-align: center;
 }
 
 .character_property {
@@ -57,8 +56,8 @@ ul.character {
   opacity: 0;
   overflow: hidden;
   transition:
-    opacity 0.3s ease,
-    max-height 0.3s ease;
+    opacity 0.5s ease,
+    max-height 0.5s ease;
   justify-content: space-around;
   align-items: center;
 }
@@ -67,8 +66,8 @@ ul.character {
   max-height: 500px;
   opacity: 1;
   transition:
-    opacity 0.3s ease,
-    max-height 0.3s ease;
+    opacity 0.5s ease,
+    max-height 0.5s ease;
 }
 
 .button {
@@ -76,13 +75,8 @@ ul.character {
   align-self: center;
 }
 
-button.active {
-  color: var(--page-activ);
-  font-size: x-large;
-  font-weight: bold;
-}
-
 .details {
   max-width: 400px;
   margin: 0 10px;
+  text-align: center;
 }
