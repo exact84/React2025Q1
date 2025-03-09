@@ -1,6 +1,6 @@
 'use client';
 
-import Loader from '@components/Loader/Loader';
+import Loader from '@/app/loading';
 import styles from '../../components/ResultPage/ResultPage.module.css';
 import { Character } from 'types/characterTypes';
 

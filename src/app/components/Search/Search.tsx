@@ -1,28 +1,30 @@
+'use client';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import styles from './Search.module.css';
-import { useRouter } from 'next/router';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 function Search() {
   const [query, setQuery] = useState('');
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!router.isReady) return;
-    if (router.query.search) {
-      setQuery(router.query.search as string);
-    }
-  }, [router.isReady, router.query?.search]);
+    const searchQuery = searchParams.get('search') || '';
+    setQuery(searchQuery);
+  }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push({
-      pathname: router.pathname,
-      query: {
-        ...router.query,
-        search: query,
-      },
-    });
+    const params = new URLSearchParams(searchParams);
+    if (query) {
+      params.set('search', query);
+    } else {
+      params.delete('search');
+    }
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   function checkData(event: React.ChangeEvent<HTMLInputElement>) {

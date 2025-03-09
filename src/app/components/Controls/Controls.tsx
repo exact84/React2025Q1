@@ -1,29 +1,30 @@
-import { useRouter } from 'next/router';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const Controls = ({ totalPages }: { totalPages: number }) => {
   const router = useRouter();
-  const currentPage = parseInt(router.query.page as string) || 1;
-  const searchQuery = parseInt(router.query.search as string) || '';
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') as string) || 1;
 
   useEffect(() => {
-    if (!router.query.page) {
-      router.replace(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, page: 1, search: searchQuery },
-        },
-        undefined,
-        { shallow: true }
-      );
+    if (!currentPage) {
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      const searchQuery = parseInt(searchParams.get('search') as string) || '';
+      newSearchParams.set('page', '1');
+      newSearchParams.set('search', searchQuery as string);
+      router.replace(`${pathname}?${newSearchParams.toString()}`);
     }
-  }, [router, searchQuery]);
+  }, [currentPage, pathname, router, searchParams]);
 
   const handleChangePage = (page: number) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, page },
-    });
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    const searchQuery = searchParams.get('search') || '';
+    if (searchQuery) newSearchParams.set('search', searchQuery as string);
+    else newSearchParams.delete('search');
+    newSearchParams.set('page', page.toString());
+    router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
   const handlePreviousPage = () => {

@@ -3,15 +3,15 @@
 import { Character } from 'types/characterTypes';
 import styles from './ResultPage.module.css';
 import { useContext, useEffect, useState } from 'react';
-import { ThemeContext } from '../../context/ThemeContext';
-import Characters from '@components/Characters/Characters';
-import Controls from '@components/Controls/Controls';
-import CharacterDetails from '@components/CharacterDetails/CharacterDetails';
+import { ThemeContext } from '../../../context/ThemeContext';
+import Characters from '@/app/components/Characters/Characters';
+import Controls from '@/app/components/Controls/Controls';
+import CharacterDetails from '@/app/components/CharacterDetails/CharacterDetails';
 import { RootState } from 'store/indexStore';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCharacter } from '@/store/slices/checkedItemsSlice';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface CharacterListProps {
   characters: Character[];
@@ -24,8 +24,9 @@ export default function ResultPage(props: CharacterListProps) {
   );
 
   const [detailsId, setDetailsId] = useState<null | string>();
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const dispatch = useDispatch();
 
@@ -44,12 +45,12 @@ export default function ResultPage(props: CharacterListProps) {
 
   const handleClose = () => {
     dispatch(selectCharacter(null));
-    const { page, search } = router.query;
-    const details = '';
-    router.push({
-      pathname: router.pathname,
-      query: { page, search, details },
-    });
+
+    const newParams = new URLSearchParams();
+    newParams.set('page', searchParams.get('page') || '');
+    newParams.set('search', searchParams.get('search') || '');
+    newParams.delete('details');
+    router.push(`${pathname}?${newParams.toString()}`);
   };
 
   const handleClickError = () => {

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import Characters from '@components/Characters/Characters';
+import Characters from '@/app/components/Characters/Characters';
 import configureStore from 'redux-mock-store';
 import { Character } from 'types/characterTypes';
 import { vi } from 'vitest';

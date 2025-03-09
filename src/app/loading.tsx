@@ -1,4 +1,4 @@
-import styles from './Loader.module.css';
+import styles from './loading.module.css';
 const loadingGif = '/assets/star-wars-disney.gif';
 
 export default function Loader() {

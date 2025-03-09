@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Layout from './Layout';
+import Layout from '../../layout';
 
 vi.mock('@components/Header/Header', () => ({
   default: vi.fn(() => <div data-testid="header" />),

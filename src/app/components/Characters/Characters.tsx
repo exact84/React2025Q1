@@ -11,9 +11,10 @@ import {
   selectCharacter,
 } from '@/store/slices/checkedItemsSlice';
 import { RootState } from '@/store/indexStore';
-import CharacterCard from '@components/CharacterCard/CharacterCard';
-import Loader from '@components/Loader/Loader';
-import { useRouter } from 'next/router';
+import CharacterCard from '@/app/components/CharacterCard/CharacterCard';
+import Loader from '@/app/loading';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { extractIdFromUrl } from '@/utils/extractIdFromUrl';
 
 interface CharactersProps {
@@ -26,6 +27,8 @@ const Characters = ({ characters }: CharactersProps) => {
   const items = useSelector(({ items }: RootState) => items.items);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const selectedCharacter = useSelector(
     ({ items }: RootState) => items.selectedCharacter
   );
@@ -52,13 +55,13 @@ const Characters = ({ characters }: CharactersProps) => {
       const selectedCharacterId = extractIdFromUrl(selectedCharacter?.url);
       const isSameCharacter = selectedCharacterId === targetCharacterId;
       dispatch(selectCharacter(isSameCharacter ? null : character));
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          details: isSameCharacter ? null : targetCharacterId,
-        },
-      });
+      const params = new URLSearchParams(searchParams);
+      if (isSameCharacter) {
+        params.delete('details');
+      } else {
+        params.set('details', targetCharacterId as string);
+      }
+      router.push(`${pathname}?${params.toString()}`);
     }
   };
 

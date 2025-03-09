@@ -2,8 +2,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ResultPage from './ResultPage';
 import { vi } from 'vitest';
 import { Provider } from 'react-redux';
-import { store } from '../../store/indexStore';
-import { ThemeContext } from '../../context/ThemeContext';
+import { store } from '../../../store/indexStore';
+import { ThemeContext } from '../../../context/ThemeContext';
 
 describe('ResultPage Component', () => {
   const mockCharacters = [

@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ErrorBoundary } from '../';
+import { ErrorBoundary } from '..';
 
 describe('ErrorBoundary component', () => {
   test('renders child components without errors', () => {

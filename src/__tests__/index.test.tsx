@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Home, { getServerSideProps } from '../pages/index';
+import Home, { getServerSideProps } from '../app/page';
 import { getCharacterData } from '../utils/characterData';
 import { GetServerSidePropsContext } from 'next';
 
