@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 
 async function getCharacterData(page: string, search: string) {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 500));
     const queryParams = new URLSearchParams();
     if (page) queryParams.set('page', page);
     if (search) queryParams.set('search', search);
@@ -36,12 +37,11 @@ export default async function Page({
   searchParams: { page?: string; search?: string };
 }) {
   const { page = '1', search = '' } = searchParams;
-  console.log(page, search);
-
   const data = await getCharacterData(page, search);
 
   if (!data) {
     notFound();
+    return null;
   }
 
   return (

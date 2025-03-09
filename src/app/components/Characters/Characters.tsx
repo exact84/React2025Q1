@@ -55,7 +55,7 @@ const Characters = ({ characters }: CharactersProps) => {
       const selectedCharacterId = extractIdFromUrl(selectedCharacter?.url);
       const isSameCharacter = selectedCharacterId === targetCharacterId;
       dispatch(selectCharacter(isSameCharacter ? null : character));
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(searchParams.toString());
       if (isSameCharacter) {
         params.delete('details');
       } else {

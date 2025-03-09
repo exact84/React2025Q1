@@ -32,6 +32,8 @@ export default function ResultPage(props: CharacterListProps) {
 
   useEffect(() => {
     if (searchParams) setDetailsId(searchParams.get('details'));
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

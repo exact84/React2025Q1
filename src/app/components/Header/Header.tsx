@@ -7,7 +7,7 @@ export default function Header() {
 
   return (
     <div className="rowBox">
-      <h1>Task4 &quot;Next.js. SSR.&quot;</h1>
+      <h1 data-testid="header">Task4 &quot;Next.js. SSR.&quot;</h1>
       <button onClick={context.toggleTheme}>Change Theme</button>
     </div>
   );

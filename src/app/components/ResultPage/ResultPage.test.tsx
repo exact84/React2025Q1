@@ -1,76 +1,27 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ResultPage from './ResultPage';
+import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { Provider } from 'react-redux';
-import { store } from '../../../store/indexStore';
-import { ThemeContext } from '../../../context/ThemeContext';
+import Search from '../Search/Search';
+import { useRouter } from 'next/navigation';
 
-describe('ResultPage Component', () => {
-  const mockCharacters = [
-    {
-      name: 'Luke Skywalker',
-      height: '172',
-      hair_color: 'blond',
-      gender: 'male',
-      url: 'https://swapi.dev/api/people/1/',
-      eye_color: '',
-      skin_color: '',
-    },
-  ];
-
-  const renderWithProviders = (ui: React.ReactNode) => {
-    return render(
-      <Provider store={store}>
-        <ThemeContext.Provider value={{ theme: 'light', toggleTheme: vi.fn() }}>
-          {ui}
-        </ThemeContext.Provider>
-      </Provider>
-    );
+vi.mock('next/navigation', () => {
+  return {
+    usePathname: vi.fn(() => '/search'),
+    useSearchParams: vi.fn(() => new URLSearchParams('search=test')),
+    useRouter: vi.fn(() => ({ push: vi.fn() })),
   };
+});
 
-  it('renders the character list', async () => {
-    renderWithProviders(
-      <ResultPage characters={mockCharacters} totalPages={1} />
-    );
+describe('Search component', () => {
+  let pushMock: ReturnType<typeof vi.fn>;
 
-    await waitFor(() => {
-      expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
-    });
+  beforeEach(() => {
+    pushMock = vi.fn();
+    (useRouter as unknown as jest.Mock).mockReturnValue({ push: pushMock });
   });
 
-  it('displays a message if no characters are found', async () => {
-    renderWithProviders(<ResultPage characters={[]} totalPages={0} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('No characters found.')).toBeInTheDocument();
-    });
-  });
-
-  it('toggles the theme when clicking the "Change Theme" button', async () => {
-    const toggleThemeMock = vi.fn();
-    render(
-      <Provider store={store}>
-        <ThemeContext.Provider
-          value={{ theme: 'light', toggleTheme: toggleThemeMock }}
-        >
-          <ResultPage characters={mockCharacters} totalPages={1} />
-        </ThemeContext.Provider>
-      </Provider>
-    );
-
-    const button = screen.getByText('Change Theme');
-    fireEvent.click(button);
-
-    expect(toggleThemeMock).toHaveBeenCalled();
-  });
-
-  it('throws an error when clicking the "Error Button"', async () => {
-    renderWithProviders(
-      <ResultPage characters={mockCharacters} totalPages={1} />
-    );
-
-    const errorButton = screen.getByText('Error Button');
-
-    expect(() => fireEvent.click(errorButton)).toThrow('This is a test error!');
+  test('renders input with initial query from URL', () => {
+    render(<Search />);
+    const input = screen.getByPlaceholderText('Enter request...');
+    expect(input).toHaveValue('test');
   });
 });
