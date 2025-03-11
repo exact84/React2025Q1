@@ -24,6 +24,8 @@ function Search() {
     } else {
       params.delete('search');
     }
+    params.set('page', '1');
+    params.delete('details');
     router.push(`${pathname}?${params.toString()}`);
   };
 
