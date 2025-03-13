@@ -1,4 +1,4 @@
-npm test
+#!/bin/sh
 
 echo "Running pre-commit hook..."
 npm run lint

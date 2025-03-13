@@ -4,7 +4,8 @@ import './styles/global.css';
 import './index.css';
 import App from './App';
 
-createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root') as HTMLElement;
+createRoot(rootElement).render(
   <StrictMode>
     <App />
   </StrictMode>

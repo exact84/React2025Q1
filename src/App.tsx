@@ -1,32 +1,35 @@
-import { useState } from 'react';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { UserList } from './pages/UserList';
+import { ControlledForm } from './pages/ControlledForm';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-
-function ErrorThrower({ shouldThrow }: { shouldThrow: boolean }) {
-  if (shouldThrow) {
-    throw new Error('This is a test error to check ErrorBoundary!');
-  }
-  return null;
-}
+import './App.css';
 
 function App() {
-  const [shouldThrow, setShouldThrow] = useState(false);
-
   return (
-    <ErrorBoundary onReset={() => setShouldThrow(false)}>
-      <div>
-        <h1>React Forms Project</h1>
-        <div className="card">
-          <button
-            onClick={() => setShouldThrow(true)}
-            className="btn btn-danger"
-          >
-            Throw Error
-          </button>
-          <ErrorThrower shouldThrow={shouldThrow} />
-        </div>
-      </div>
-    </ErrorBoundary>
+    <Provider store={store}>
+      <ErrorBoundary>
+        <Router>
+          <div className="app">
+            <Routes>
+              <Route path="/" element={<UserList />} />
+              <Route
+                path="/uncontrolled-form"
+                element={<div>Uncontrolled Form</div>}
+              />
+              <Route path="/controlled-form" element={<ControlledForm />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
+        </Router>
+      </ErrorBoundary>
+    </Provider>
   );
 }
 

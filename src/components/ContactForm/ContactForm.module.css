@@ -1,0 +1,87 @@
+.form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.formGroup textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.errorInput {
+  border-color: #f44336 !important;
+  background-color: #fff8f8;
+}
+
+.errorText {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.formActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.submitButton {
+  min-width: 120px;
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.successMessage {
+  color: #4caf50;
+  background-color: #e8f5e9;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  width: 100%;
+}
+
+.errorMessage {
+  color: #f44336;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  width: 100%;
+}
