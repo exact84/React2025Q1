@@ -1,10 +1,12 @@
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { RootState } from '../store/store';
 import styles from './UserList.module.css';
 
 export const UserList = () => {
   const users = useSelector((state: RootState) => state.users.users);
+  const location = useLocation();
+  const newUserId = location.state?.newUserId;
 
   return (
     <div className={styles.container}>
@@ -19,12 +21,16 @@ export const UserList = () => {
       </div>
       <div className={styles.users}>
         {users.map((user) => (
-          <div key={user.id} className={styles.userCard}>
+          <div
+            key={user.id}
+            className={`${styles.userCard} ${user.id === newUserId ? styles.newUser : ''}`}
+          >
             <h3>{user.name}</h3>
             <p>Возраст: {user.age}</p>
             <p>Email: {user.email}</p>
             <p>Пол: {user.gender === 'male' ? 'Male' : 'Female'}</p>
             <p>Страна: {user.country}</p>
+            <img src={user.image} alt="User" className={styles.userImage} />
           </div>
         ))}
       </div>

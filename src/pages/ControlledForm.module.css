@@ -11,14 +11,25 @@
 }
 
 .formGroup {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 20px;
 }
 
 .formGroup label {
-  display: block;
-  margin-bottom: 8px;
   font-weight: 500;
   color: #333;
+}
+
+.inputWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.centeredGroup {
+  display: flex;
+  align-items: center;
 }
 
 .formGroup input[type='text'],
@@ -26,8 +37,8 @@
 .formGroup input[type='password'],
 .formGroup input[type='number'],
 .formGroup select {
-  width: 90%;
-  padding: 8px 12px;
+  width: 60%;
+  padding: 4px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;

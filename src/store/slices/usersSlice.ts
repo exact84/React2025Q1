@@ -7,6 +7,8 @@ export interface User {
   email: string;
   gender: 'male' | 'female';
   country: string;
+  image: string;
+  isNew?: boolean;
 }
 
 interface UsersState {

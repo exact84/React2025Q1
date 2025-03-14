@@ -6,6 +6,7 @@
 
 .links {
   display: flex;
+  justify-content: center;
   gap: 20px;
   margin: 20px 0;
 }
@@ -25,7 +26,7 @@
 
 .users {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }
@@ -46,4 +47,14 @@
 .userCard p {
   margin: 5px 0;
   color: #666;
+}
+
+.userImage {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.newUser {
+  border: 2px solid #28a745;
 }

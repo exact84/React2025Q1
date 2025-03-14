@@ -1,4 +1,7 @@
+import { store } from '../store/store';
 import { z } from 'zod';
+
+const countries = store.getState().countries.countries;
 
 export const userSchema = z
   .object({
@@ -16,8 +19,25 @@ export const userSchema = z
     terms: z.boolean().refine((val) => val === true, {
       message: 'You must accept the terms',
     }),
-    country: z.string().min(1, 'Please select a country'),
-    image: z.any().optional(),
+    country: z.string().refine((val) => countries.some((c) => c.name === val), {
+      message: 'Please select a valid country from the list',
+    }),
+    image: z
+      .instanceof(FileList)
+      .refine((files) => files && files.length === 1, {
+        message: 'Please upload one file',
+      })
+      .refine(
+        (files) =>
+          !files ||
+          files.length === 0 ||
+          ['image/png', 'image/jpeg'].includes(files[0]?.type),
+        'Only PNG or JPEG files are allowed'
+      )
+      .refine(
+        (files) => files[0]?.size <= 5 * 1024 * 1024,
+        'File size must be less than 5MB'
+      ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
