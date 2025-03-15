@@ -15,10 +15,6 @@ function App() {
           <div className="app">
             <Routes>
               <Route path="/" element={<UserList />} />
-              {/* <Route
-                path="/uncontrolled-form"
-                element={<div>Uncontrolled Form</div>}
-              /> */}
               <Route path="/controlled-form" element={<ControlledForm />} />
               <Route path="/uncontrolled-form" element={<UncontrolledForm />} />
             </Routes>

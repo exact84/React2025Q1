@@ -5,17 +5,37 @@ const countries = store.getState().countries.countries;
 
 export const userSchema = z
   .object({
-    name: z.string().min(2, 'Name must be at least 2 characters'),
-    age: z.number().min(18, 'Age must be at least 18 years'),
+    name: z.string().refine((name) => /^[A-ZА-ЯЁ]/.test(name), {
+      message: 'Name must start with a capital letter',
+    }),
+    age: z
+      .string()
+      .refine(
+        (val) => {
+          if (!val.trim()) return false;
+          const num = Number(val);
+          return !isNaN(num) && num > 0;
+        },
+        {
+          message: 'Age must be a positive number',
+        }
+      )
+      .transform((val) => Number(val)),
     email: z.string().email('Invalid email address'),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters')
+      .regex(/[0-9]/, 'Password must contain at least one number')
       .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
       .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-      .regex(/[0-9]/, 'Password must contain at least one number'),
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        'Password must contain at least one special character'
+      ),
     confirmPassword: z.string(),
-    gender: z.enum(['male', 'female']),
+    gender: z.enum(['male', 'female'], {
+      required_error: 'Please select your gender',
+      invalid_type_error: 'Please select your gender',
+    }),
     terms: z.boolean().refine((val) => val === true, {
       message: 'You must accept the terms',
     }),
@@ -24,18 +44,17 @@ export const userSchema = z
     }),
     image: z
       .instanceof(FileList)
-      .refine((files) => files && files.length === 1, {
+      .refine((files) => files.length === 1, {
         message: 'Please upload one file',
       })
       .refine(
         (files) =>
-          !files ||
           files.length === 0 ||
-          ['image/png', 'image/jpeg'].includes(files[0]?.type),
+          ['image/png', 'image/jpeg'].includes(files[0].type),
         'Only PNG or JPEG files are allowed'
       )
       .refine(
-        (files) => files[0]?.size <= 5 * 1024 * 1024,
+        (files) => files.length === 0 || files[0].size <= 5 * 1024 * 1024,
         'File size must be less than 5MB'
       ),
   })

@@ -10,10 +10,10 @@ export const UserList = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Список пользователей</h1>
+      <h1>User List</h1>
       <div className={styles.links}>
         <Link to="/uncontrolled-form" className={styles.link}>
-          Uncontrolled components approach
+          Uncontrolled components
         </Link>
         <Link to="/controlled-form" className={styles.link}>
           React Hook Form
@@ -26,10 +26,10 @@ export const UserList = () => {
             className={`${styles.userCard} ${user.id === newUserId ? styles.newUser : ''}`}
           >
             <h3>{user.name}</h3>
-            <p>Возраст: {user.age}</p>
+            <p>Age: {user.age}</p>
             <p>Email: {user.email}</p>
-            <p>Пол: {user.gender === 'male' ? 'Male' : 'Female'}</p>
-            <p>Страна: {user.country}</p>
+            <p>Gender: {user.gender === 'male' ? 'Male' : 'Female'}</p>
+            <p>Country: {user.country}</p>
             <img src={user.image} alt="User" className={styles.userImage} />
           </div>
         ))}

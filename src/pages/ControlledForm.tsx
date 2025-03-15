@@ -6,25 +6,7 @@ import { userSchema, type UserFormData } from '../schemas/userSchema';
 import { addUser } from '../store/slices/usersSlice';
 import { RootState } from '../store/store';
 import styles from './ControlledForm.module.css';
-
-const validateAndConvertImage = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const validExtensions = ['image/png', 'image/jpeg'];
-    const maxSizeInMB = 5;
-    const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
-
-    if (!validExtensions.includes(file.type)) {
-      reject(new Error('Only PNG and JPEG files are allowed.'));
-    } else if (file.size > maxSizeInBytes) {
-      reject(new Error(`File size must be less than ${maxSizeInMB}MB.`));
-    } else {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = () => reject(new Error('Error reading file.'));
-      reader.readAsDataURL(file);
-    }
-  });
-};
+import { validateAndConvertImage } from '../utils/validateImage';
 
 export const ControlledForm = () => {
   const dispatch = useDispatch();
@@ -36,10 +18,13 @@ export const ControlledForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty, dirtyFields },
     setError,
+    trigger,
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
+    mode: 'onChange',
+    delayError: 500,
   });
 
   const generateId = () => {
@@ -72,10 +57,19 @@ export const ControlledForm = () => {
     }
   };
 
-  console.log('Render ControlledForm');
+  const validateField = (fieldName: keyof UserFormData) => {
+    if (dirtyFields[fieldName]) {
+      trigger(fieldName);
+    }
+  };
+
+  const validatePasswords = () => {
+    trigger(['password', 'confirmPassword']);
+  };
+
   return (
     <div className={styles.container}>
-      <h1>User Registration Form</h1>
+      <h1>User Registration React Hook Form</h1>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <div className={styles.formGroup}>
           <div className={styles.inputWrapper}>
@@ -83,7 +77,9 @@ export const ControlledForm = () => {
             <input
               id="name"
               type="text"
-              {...register('name')}
+              {...register('name', {
+                onChange: () => validateField('name'),
+              })}
               className={errors.name ? styles.errorInput : ''}
             />
           </div>
@@ -97,8 +93,10 @@ export const ControlledForm = () => {
             <label htmlFor="age">Age</label>
             <input
               id="age"
-              type="number"
-              {...register('age', { valueAsNumber: true })}
+              type="text"
+              {...register('age', {
+                onChange: () => validateField('age'),
+              })}
               className={errors.age ? styles.errorInput : ''}
             />
           </div>
@@ -113,7 +111,9 @@ export const ControlledForm = () => {
             <input
               id="email"
               type="email"
-              {...register('email')}
+              {...register('email', {
+                onChange: () => validateField('email'),
+              })}
               className={errors.email ? styles.errorInput : ''}
             />
           </div>
@@ -128,7 +128,9 @@ export const ControlledForm = () => {
             <input
               id="password"
               type="password"
-              {...register('password')}
+              {...register('password', {
+                onChange: validatePasswords,
+              })}
               className={errors.password ? styles.errorInput : ''}
             />
           </div>
@@ -143,7 +145,9 @@ export const ControlledForm = () => {
             <input
               id="confirmPassword"
               type="password"
-              {...register('confirmPassword')}
+              {...register('confirmPassword', {
+                onChange: validatePasswords,
+              })}
               className={errors.confirmPassword ? styles.errorInput : ''}
             />
           </div>
@@ -159,17 +163,65 @@ export const ControlledForm = () => {
             <label>Gender</label>
             <div className={styles.radioGroup}>
               <label>
-                <input type="radio" {...register('gender')} value="male" />
+                <input
+                  type="radio"
+                  {...register('gender', {
+                    onChange: () => validateField('gender'),
+                  })}
+                  value="male"
+                />
                 Male
               </label>
               <label>
-                <input type="radio" {...register('gender')} value="female" />
+                <input
+                  type="radio"
+                  {...register('gender', {
+                    onChange: () => validateField('gender'),
+                  })}
+                  value="female"
+                />
                 Female
               </label>
             </div>
           </div>
           {errors.gender && (
             <span className={styles.error}>{errors.gender.message}</span>
+          )}
+        </div>
+
+        <div className={`${styles.formGroup} ${styles.centeredGroup}`}>
+          <div className={styles.inputWrapper}>
+            <label>
+              <input
+                type="checkbox"
+                {...register('terms', {
+                  onChange: () => validateField('terms'),
+                })}
+              />
+              I agree to the terms
+            </label>
+          </div>
+          {errors.terms && (
+            <span className={styles.error}>{errors.terms.message}</span>
+          )}
+        </div>
+
+        <div className={`${styles.formGroup} ${styles.centeredGroup}`}>
+          <div className={styles.inputWrapper}>
+            <label htmlFor="image">Photo</label>
+            <input
+              id="image"
+              type="file"
+              accept="image/png,image/jpeg"
+              {...register('image', {
+                onChange: () => validateField('image'),
+              })}
+            />
+          </div>
+          {errors.image && (
+            <span className={styles.error}>
+              {errors.image.message as string | undefined}
+            </span>
           )}
         </div>
 
@@ -180,7 +232,9 @@ export const ControlledForm = () => {
               id="country"
               type="text"
               list="countryList"
-              {...register('country')}
+              {...register('country', {
+                onChange: () => validateField('country'),
+              })}
               className={errors.country ? styles.errorInput : ''}
             />
             <datalist id="countryList">
@@ -196,38 +250,9 @@ export const ControlledForm = () => {
           )}
         </div>
 
-        <div className={`${styles.formGroup} ${styles.centeredGroup}`}>
-          <div className={styles.inputWrapper}>
-            <label htmlFor="image">Photo</label>
-            <input
-              id="image"
-              type="file"
-              accept="image/png,image/jpeg"
-              {...register('image')}
-            />
-          </div>
-          {errors.image && (
-            <span className={styles.error}>
-              {errors.image.message as string | undefined}
-            </span>
-          )}
-        </div>
-
-        <div className={`${styles.formGroup} ${styles.centeredGroup}`}>
-          <div className={styles.inputWrapper}>
-            <label>
-              <input type="checkbox" {...register('terms')} />I agree to the
-              terms
-            </label>
-          </div>
-          {errors.terms && (
-            <span className={styles.error}>{errors.terms.message}</span>
-          )}
-        </div>
-
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isDirty || Object.keys(errors).length > 0}
           className={styles.submitButton}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
