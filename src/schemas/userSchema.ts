@@ -73,10 +73,12 @@ export const userSchema = z
       }
     ),
     confirmPassword: z.string(),
-    gender: z.enum(['male', 'female'], {
-      required_error: 'Please select your gender',
-      invalid_type_error: 'Please select your gender',
-    }),
+    gender: z
+      .enum(['male', 'female'])
+      .nullable()
+      .refine((val) => val !== null, {
+        message: 'Please select your gender',
+      }),
     terms: z.boolean().refine((val) => val === true, {
       message: 'You must accept the terms',
     }),
