@@ -21,6 +21,7 @@ export const ControlledForm = () => {
     formState: { errors, isSubmitting, isDirty, dirtyFields },
     setError,
     trigger,
+    watch,
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     mode: 'onChange',
@@ -30,6 +31,8 @@ export const ControlledForm = () => {
   const generateId = () => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
   };
+
+  const passwordValue = watch('password');
 
   const onSubmit = async (data: UserFormData) => {
     try {
@@ -110,7 +113,7 @@ export const ControlledForm = () => {
             <label htmlFor="email">Email</label>
             <input
               id="email"
-              type="email"
+              type="text"
               {...register('email', {
                 onChange: () => validateField('email'),
               })}
@@ -134,8 +137,14 @@ export const ControlledForm = () => {
               className={errors.password ? styles.errorInput : ''}
             />
           </div>
-          {errors.password && (
-            <span className={styles.error}>{errors.password.message}</span>
+          {passwordValue && dirtyFields.password && (
+            <span className={errors.password ? styles.error : styles.info}>
+              {errors.password ? (
+                errors.password.message
+              ) : (
+                <strong>Password is strong</strong>
+              )}
+            </span>
           )}
         </div>
 

@@ -126,7 +126,7 @@ export const UncontrolledForm = () => {
             <label htmlFor="email">Email</label>
             <input
               id="email"
-              type="email"
+              type="text"
               ref={emailRef}
               className={errors.email ? styles.errorInput : ''}
             />
@@ -144,8 +144,10 @@ export const UncontrolledForm = () => {
               className={errors.password ? styles.errorInput : ''}
             />
           </div>
-          {errors.password && (
-            <span className={styles.error}>{errors.password}</span>
+          {passwordRef.current?.value && (
+            <span className={errors.password ? styles.error : styles.info}>
+              {errors.password || 'Password strength: strong'}
+            </span>
           )}
         </div>
 

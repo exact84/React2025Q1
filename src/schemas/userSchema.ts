@@ -3,6 +3,23 @@ import { z } from 'zod';
 
 const countries = store.getState().countries.countries;
 
+const evaluatePasswordStrength = (password: string) => {
+  const conditions = [
+    /[0-9]/.test(password),
+    /[A-Z]/.test(password),
+    /[a-z]/.test(password),
+    /[!@#$%^&*(),.?":{}|<>]/.test(password),
+  ];
+  const metConditions = conditions.filter(Boolean).length;
+
+  if (metConditions < 3) {
+    return 'weak';
+  } else if (metConditions === 3) {
+    return 'normal';
+  }
+  return 'strong';
+};
+
 export const userSchema = z
   .object({
     name: z.string().refine((name) => /^[A-ZА-ЯЁ]/.test(name), {
@@ -21,16 +38,40 @@ export const userSchema = z
         }
       )
       .transform((val) => Number(val)),
-    email: z.string().email('Invalid email address'),
-    password: z
+    email: z
       .string()
-      .regex(/[0-9]/, 'Password must contain at least one number')
-      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-      .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-      .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        'Password must contain at least one special character'
-      ),
+      .email('Invalid email address')
+      .min(1, { message: 'Email is required' }),
+    password: z.string().refine(
+      (value) => {
+        const status = evaluatePasswordStrength(value);
+        return status === 'strong';
+      },
+      (value) => {
+        const status = evaluatePasswordStrength(value);
+        if (!/[0-9]/.test(value)) {
+          return {
+            message: `Password is ${status}. It must contain at least one number.`,
+          };
+        }
+        if (!/[A-Z]/.test(value)) {
+          return {
+            message: `Password is ${status}. It must contain at least one uppercase letter.`,
+          };
+        }
+        if (!/[a-z]/.test(value)) {
+          return {
+            message: `Password is ${status}. It must contain at least one lowercase letter.`,
+          };
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+          return {
+            message: `Password is ${status}. It must contain at least one special character.`,
+          };
+        }
+        return { message: 'Unknown error' };
+      }
+    ),
     confirmPassword: z.string(),
     gender: z.enum(['male', 'female'], {
       required_error: 'Please select your gender',
