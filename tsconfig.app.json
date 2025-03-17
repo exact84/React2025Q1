@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "allowImportingTsExtensions": true,
+    "noEmit": true, //true??
+    "jsx": "react-jsx"
+  }
+}

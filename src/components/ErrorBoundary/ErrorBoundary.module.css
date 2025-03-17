@@ -1,0 +1,33 @@
+.wrapper {
+  padding: 20px;
+  text-align: center;
+  background-color: #fff3f3;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  margin: 20px;
+}
+
+.title {
+  color: #d32f2f;
+  margin-bottom: 16px;
+}
+
+.details {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.summary {
+  cursor: pointer;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.errorMessage {
+  background-color: #f8f8f8;
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 14px;
+  color: #d32f2f;
+}

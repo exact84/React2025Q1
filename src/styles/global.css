@@ -1,0 +1,33 @@
+:root {
+  --primary-color: #2196f3;
+  --primary-hover: #1976d2;
+  --danger-color: #ff4444;
+  --danger-hover: #ff1111;
+  --text-light: #ffffff;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  color: var(--text-light);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-hover);
+}
