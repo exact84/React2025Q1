@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import usersReducer from './slices/usersSlice';
-import countriesReducer from './slices/countriesSlice';
+import { countriesApi } from './countriesApi';
 
 export const store = configureStore({
   reducer: {
-    users: usersReducer,
-    countries: countriesReducer,
+    [countriesApi.reducerPath]: countriesApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(countriesApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
