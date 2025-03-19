@@ -13,9 +13,9 @@ export default function CountryList({ countries }: { countries: Country[] }) {
           Using State
         </Link>
       </div> */}
-      <div className={styles.users}>
+      <div className={styles.countrys}>
         {countries.map((country) => (
-          <div key={country.ccn3} className={`${styles.userCard}`}>
+          <div key={country.ccn3} className={`${styles.countryCard}`}>
             <h3>{country.name.common}</h3>
             <p>Population: {country.population}</p>
             <p>Region: {country.region}</p>
@@ -23,7 +23,7 @@ export default function CountryList({ countries }: { countries: Country[] }) {
             <img
               src={country.flags.png}
               alt="Flag"
-              className={styles.userImage}
+              className={styles.countryImage}
             />
           </div>
         ))}
