@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGetCountriesQuery } from '../store/countriesApi';
 import CountryList from '../components/CountryList/CountryList';
 import Search from '../components/Search/Search';
-import useDebouncedValue from '../utils/useDebouncedValue';
+// import useDebouncedValue from '../utils/useDebouncedValue';
 
 const Home = () => {
   const { data: countries, error, isLoading } = useGetCountriesQuery();
@@ -11,7 +11,9 @@ const Home = () => {
   const [sortType, setSortType] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  const searchQuery = useDebouncedValue(search, 300);
+  // const searchQuery = useDebouncedValue(search, 500);
+  // const searchQuery = useDeferredValue(search);
+  const searchQuery = search;
 
   const filteredCountries =
     countries?.filter((country) => {
@@ -43,9 +45,12 @@ const Home = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
 
+  console.log('Render Home');
+
   return (
     <div>
       <Search searchQuery={search} onSearch={setSearch} />
+      <span>Region: </span>
       <select value={region} onChange={(e) => setRegion(e.target.value)}>
         <option value="">All</option>
         <option value="Africa">Africa</option>
