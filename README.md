@@ -46,3 +46,6 @@
 ![filtering](./public/after/3RankedChart1.png)
 ![searching](./public/after/3RankedChart2.png)
 ![sorting](./public/after/3RankedChart3.png)
+
+# Conclusion:
+#### The optimization has clearly improved the rendering: the rendering time of <CountryList /> and <Home /> has been reduced by 2-5 times, which indicates the effectiveness of using memo and useCallback.
