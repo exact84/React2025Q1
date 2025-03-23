@@ -6,7 +6,9 @@ export const store = configureStore({
     [countriesApi.reducerPath]: countriesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(countriesApi.middleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      countriesApi.middleware
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

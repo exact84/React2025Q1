@@ -1,6 +1,7 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { useEffect, useState, memo, useCallback } from 'react';
 import styles from './CountryList.module.css';
-import { Country } from 'src/types/Country';
+import { Country } from '../../types/Country';
+import CountryCard from '../CountryCard/CountryCard';
 
 const VISITED_COUNTRIES_KEY = 'visitedCountries';
 
@@ -33,21 +34,12 @@ function CountryList({ countries }: { countries: Country[] }) {
       <h1>Country List</h1>
       <div className={styles.countrys}>
         {countries.map((country) => (
-          <div
+          <CountryCard
             key={country.ccn3 || country.name.common}
-            className={`${styles.countryCard} ${visitedCountries.includes(country.name.common) ? styles.visited : ''}`}
-            onClick={() => toggleVisited(country.name.common)}
-          >
-            <h3>{country.name.common}</h3>
-            <p>Population: {country.population}</p>
-            <p>Region: {country.region}</p>
-            <p style={{ fontSize: '12px' }}>Flag: {country.flags.png}</p>
-            <img
-              src={country.flags.png}
-              alt="Flag"
-              className={styles.countryImage}
-            />
-          </div>
+            country={country}
+            toggleVisited={toggleVisited}
+            isVisited={visitedCountries.includes(country.name.common)}
+          />
         ))}
       </div>
     </div>
