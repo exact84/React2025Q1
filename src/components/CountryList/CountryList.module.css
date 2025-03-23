@@ -1,0 +1,64 @@
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 5px;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.link {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.link:hover {
+  background-color: #0056b3;
+}
+
+.countrys {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.countryCard {
+  padding: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.visited {
+  background-color: lightgreen;
+}
+
+.countryCard h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.countryCard p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.countryImage {
+  max-width: 150px;
+  max-height: 1500px;
+  object-fit: cover;
+}
+
+.newcountry {
+  border: 2px solid #28a745;
+}

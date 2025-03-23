@@ -1,0 +1,41 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# JS/TS files
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+
+# Styles
+*.css text
+*.scss text
+*.sass text
+
+# HTML/JSON
+*.html text
+*.json text
+
+# Documentation
+*.md text
+*.txt text
+
+# Config files
+*.yml text
+*.yaml text
+*.config.js text
+*.config.ts text
+.env* text
+.gitignore text
+.gitattributes text
+.prettierrc text
+
+# Binary files
+*.ico binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary 
