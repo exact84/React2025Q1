@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useGetCountriesQuery } from '../store/countriesApi';
 import CountryList from '../components/CountryList/CountryList';
 import Search from '../components/Search/Search';
-// import useDebouncedValue from '../utils/useDebouncedValue';
 
 const Home = () => {
   const { data: countries, error, isLoading } = useGetCountriesQuery();
@@ -11,41 +10,43 @@ const Home = () => {
   const [sortType, setSortType] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  // const searchQuery = useDebouncedValue(search, 500);
-  // const searchQuery = useDeferredValue(search);
-  const searchQuery = search;
-
-  const filteredCountries =
-    countries?.filter((country) => {
+  const filteredCountries = useMemo(() => {
+    if (!countries) return [];
+    const result = countries.filter((country) => {
       return (
-        country.name.common.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        country.name.common.toLowerCase().includes(search.toLowerCase()) &&
         (region === '' || country.region === region)
       );
-    }) || [];
-
-  if (sortType) {
-    filteredCountries.sort((a, b) => {
-      const valueA = sortType === 'name' ? a.name.common : a.population;
-      const valueB = sortType === 'name' ? b.name.common : b.population;
-      if (valueA < valueB) return sortOrder === 'asc' ? -1 : 1;
-      if (valueA > valueB) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
     });
-  }
 
-  const handleSort = (type: 'name' | 'population') => {
-    if (sortType === type) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortType(type);
-      setSortOrder('asc');
+    if (sortType) {
+      result.sort((a, b) => {
+        const valueA = sortType === 'name' ? a.name.common : a.population;
+        const valueB = sortType === 'name' ? b.name.common : b.population;
+        return sortOrder === 'asc'
+          ? valueA > valueB
+            ? 1
+            : -1
+          : valueA < valueB
+            ? 1
+            : -1;
+      });
     }
-  };
+    return result;
+  }, [countries, search, region, sortType, sortOrder]);
+
+  const handleSort = useCallback(
+    (type: SetStateAction<string>) => {
+      setSortOrder((prev) =>
+        sortType === type ? (prev === 'asc' ? 'desc' : 'asc') : 'asc'
+      );
+      setSortType(type);
+    },
+    [sortType]
+  );
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
-
-  console.log('Render Home');
 
   return (
     <div>

@@ -11,15 +11,13 @@ export default function Search(props: Props) {
   }
 
   return (
-    <>
-      <section className={styles.top}>
-        <input
-          type="text"
-          value={props.searchQuery}
-          onChange={checkData}
-          placeholder="Enter request..."
-        ></input>
-      </section>
-    </>
+    <section className={styles.top}>
+      <input
+        type="text"
+        value={props.searchQuery}
+        onChange={checkData}
+        placeholder="Enter request..."
+      ></input>
+    </section>
   );
 }
