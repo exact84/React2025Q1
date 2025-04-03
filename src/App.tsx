@@ -4,7 +4,7 @@ import Search from './components/Search/Search';
 import ResultPage from './components/Result-page/Result-page';
 import { Character } from './types/characterTypes';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
-
+// test
 class App extends Component {
   state = {
     characters: [],
